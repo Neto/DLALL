@@ -1,0 +1,3 @@
+# Pacotes gerados (DLYT-versão-build.pkg). Não versionar no git — são ~95 MB cada.
+*.pkg
+*.zip

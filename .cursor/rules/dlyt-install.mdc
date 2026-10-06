@@ -1,0 +1,21 @@
+---
+description: Instalar DLYT em /Applications, arquivar o .pkg e deixar um novo na Mesa
+alwaysApply: true
+---
+
+# DLYT — instalar, arquivar, Mesa
+
+O app publicado é **sempre** `/Applications/DLYT.app`. Versão nova **substitui** esse path. Nunca `DLYT 2.app`.
+
+Arquivo permanente dos instaladores: **`dist/DLYT-{MARKETING}-{BUILD}.pkg`** (ex.: `dist/DLYT-1.4-5.pkg`).
+
+Depois de qualquer mudança de código do app:
+
+1. Atualize a versão em `project.yml` (`MARKETING_VERSION` / `CURRENT_PROJECT_VERSION`) e rode `xcodegen generate`.
+2. Publique com `./scripts/make-installer.sh` (não só o Debug local). Esse script:
+   - substitui `/Applications/DLYT.app`
+   - grava `dist/DLYT-{versão}-{build}.pkg`
+   - deixa **`~/Desktop/DLYT.pkg`** — o da vez, para mandar aos amigos
+3. Relance `/Applications/DLYT.app`.
+
+Não declare a tarefa concluída sem o replace em `/Applications` e o `.pkg` novo na Mesa **e** em `dist/`.

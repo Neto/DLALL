@@ -1,0 +1,7 @@
+Vendor/Helpers/
+dist/*.pkg
+dist/*.zip
+.DS_Store
+*.orig
+xcuserdata/
+build/
