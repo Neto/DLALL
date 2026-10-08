@@ -176,7 +176,7 @@ final class LibraryModel {
                     quality: quality,
                     outputFolder: settings.resolvedOutputFolder,
                     customBinary: settings.customYTDLPPath,
-                    cookies: settings.cookiesBrowser
+                    cookies: info.resolvedCookies
                 ) { [weak self] progress in
                     Task { @MainActor in
                         self?.update(id) { current in

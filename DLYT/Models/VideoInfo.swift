@@ -8,6 +8,8 @@ struct VideoInfo: Sendable, Equatable {
     var uploader: String?
     var webpageURL: String?
     var extractor: String?
+    /// Cookies que funcionaram na busca; o download reaproveita.
+    var resolvedCookies: BrowserCookies = .none
 
     var durationLabel: String? {
         guard let duration, duration.isFinite, duration > 0 else { return nil }

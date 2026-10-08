@@ -33,33 +33,65 @@ enum YTDLPClient: Sendable {
     private static let infoJSONFields =
         "%(.{id,title,thumbnail,duration,uploader,channel,webpage_url,original_url,extractor,extractor_key})j"
 
+    static let loginMessage =
+        "Este link exige login. Entre na sua conta no Safari ou no Chrome (o DLYT usa os cookies do navegador sozinho) e tente de novo."
+    static let permissionMessage =
+        "O DLYT não conseguiu ler os cookies do navegador. Abra System Settings > Privacy & Security > Full Disk Access, ative o DLYT e tente de novo."
+
+    static func cookieCandidates(for cookies: BrowserCookies) -> [BrowserCookies] {
+        cookies == .auto ? [.none] + BrowserCookies.automaticChain : [cookies]
+    }
+
+    private static func needsAnotherBrowser(_ error: YTDLPError) -> Bool {
+        if case .failed(_, let message) = error {
+            return message == loginMessage || message == permissionMessage
+        }
+        return false
+    }
+
+    /// Prefere o erro de permissão (acionável); senão o primeiro.
+    private static func pickError(_ errors: [Error]) -> Error {
+        for case let error as YTDLPError in errors {
+            if case .failed(_, let message) = error, message == permissionMessage { return error }
+        }
+        return errors.first ?? YTDLPError.invalidURL
+    }
+
     static func fetchInfo(
         url: String,
         customBinary: String,
         cookies: BrowserCookies,
         onLine: @escaping @Sendable (String) -> Void = { _ in }
     ) async throws -> VideoInfo {
-        var firstError: Error?
+        var errors: [Error] = []
         for candidate in candidateURLs(for: url) {
-            do {
-                var info = try await fetchInfoOnce(
-                    url: candidate,
-                    customBinary: customBinary,
-                    cookies: cookies,
-                    onLine: onLine
-                )
-                if candidate != url, info.webpageURL == candidate { info.webpageURL = url }
-                return info
-            } catch let error as YTDLPError {
-                if case .cancelled = error { throw error }
-                firstError = firstError ?? error
-            } catch is CancellationError {
-                throw CancellationError()
-            } catch {
-                firstError = firstError ?? error
+            for cookie in cookieCandidates(for: cookies) {
+                if cookie != .none, cookies == .auto {
+                    onLine("Tentando com os cookies do \(cookie.title)…")
+                }
+                do {
+                    var info = try await fetchInfoOnce(
+                        url: candidate,
+                        customBinary: customBinary,
+                        cookies: cookie,
+                        onLine: onLine
+                    )
+                    if candidate != url, info.webpageURL == candidate { info.webpageURL = url }
+                    info.resolvedCookies = cookie
+                    return info
+                } catch let error as YTDLPError {
+                    if case .cancelled = error { throw error }
+                    errors.append(error)
+                    if !needsAnotherBrowser(error) { break }
+                } catch is CancellationError {
+                    throw CancellationError()
+                } catch {
+                    errors.append(error)
+                    break
+                }
             }
         }
-        throw firstError ?? YTDLPError.invalidURL
+        throw pickError(errors)
     }
 
     private static func fetchInfoOnce(
@@ -84,6 +116,7 @@ enum YTDLPClient: Sendable {
             onLine: onLine
         )
         if result.status != 0 {
+            DiagnosticLog.write("fetchInfo cookies=\(cookies.rawValue) url=\(url) status=\(result.status) log=\(result.log)")
             throw YTDLPError.failed(status: result.status, message: friendlyMessage(from: result.log, url: url))
         }
         let trimmed = result.stdout.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -103,27 +136,31 @@ enum YTDLPClient: Sendable {
         cookies: BrowserCookies,
         onProgress: @escaping @Sendable (DownloadProgress) -> Void
     ) async throws -> URL {
-        var firstError: Error?
+        var errors: [Error] = []
         for candidate in candidateURLs(for: url) {
-            do {
-                return try await downloadOnce(
-                    url: candidate,
-                    quality: quality,
-                    outputFolder: outputFolder,
-                    customBinary: customBinary,
-                    cookies: cookies,
-                    onProgress: onProgress
-                )
-            } catch let error as YTDLPError {
-                if case .cancelled = error { throw error }
-                firstError = firstError ?? error
-            } catch is CancellationError {
-                throw CancellationError()
-            } catch {
-                firstError = firstError ?? error
+            for cookie in cookieCandidates(for: cookies) {
+                do {
+                    return try await downloadOnce(
+                        url: candidate,
+                        quality: quality,
+                        outputFolder: outputFolder,
+                        customBinary: customBinary,
+                        cookies: cookie,
+                        onProgress: onProgress
+                    )
+                } catch let error as YTDLPError {
+                    if case .cancelled = error { throw error }
+                    errors.append(error)
+                    if !needsAnotherBrowser(error) { break }
+                } catch is CancellationError {
+                    throw CancellationError()
+                } catch {
+                    errors.append(error)
+                    break
+                }
             }
         }
-        throw firstError ?? YTDLPError.invalidURL
+        throw pickError(errors)
     }
 
     private static func downloadOnce(
@@ -183,6 +220,7 @@ enum YTDLPClient: Sendable {
 
         if Task.isCancelled { throw YTDLPError.cancelled }
         if result.status != 0 {
+            DiagnosticLog.write("download cookies=\(cookies.rawValue) url=\(url) status=\(result.status) log=\(result.log)")
             throw YTDLPError.failed(status: result.status, message: friendlyMessage(from: result.log, url: url))
         }
 
@@ -512,8 +550,13 @@ enum YTDLPClient: Sendable {
         if lower.contains("vimeo"), lower.contains("referer") || lower.contains("embedding") {
             return "Este vídeo do Vimeo só toca incorporado em outro site. Abra a página do site que o exibe e cole o link dessa página."
         }
-        if lower.contains("login") || lower.contains("cookies") || lower.contains("sign in") {
-            return "Este link pode exigir que você esteja logado. Em Ajustes, ative Cookies do navegador (Safari ou Chrome) e tente de novo."
+        if lower.contains("operation not permitted") || lower.contains("permissionerror")
+            || lower.contains("full disk access") || lower.contains("could not find") && lower.contains("cookies") {
+            return permissionMessage
+        }
+        if lower.contains("login") || lower.contains("logged-in") || lower.contains("cookies")
+            || lower.contains("sign in") || lower.contains("not a bot") {
+            return loginMessage
         }
         if lower.contains("private") || lower.contains("unavailable") {
             return "O vídeo está privado, foi removido ou não está disponível nesta região."
@@ -541,6 +584,28 @@ enum YTDLPClient: Sendable {
             return String(trimmed.dropFirst(6)).trimmingCharacters(in: .whitespaces)
         }
         return trimmed
+    }
+}
+
+/// Registro simples em ~/Library/Logs/DLYT.log para diagnosticar falhas (cookies, permissões, bot check).
+enum DiagnosticLog: Sendable {
+    private static let lock = NSLock()
+
+    static func write(_ message: String) {
+        let tail = String(message.suffix(1500)).replacingOccurrences(of: "\n", with: " | ")
+        let line = "\(Date().formatted(.iso8601)) \(tail)\n"
+        lock.lock()
+        defer { lock.unlock() }
+        let dir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let url = dir.appendingPathComponent("DLYT.log")
+        if let handle = try? FileHandle(forWritingTo: url) {
+            defer { try? handle.close() }
+            _ = try? handle.seekToEnd()
+            try? handle.write(contentsOf: Data(line.utf8))
+        } else {
+            try? Data(line.utf8).write(to: url)
+        }
     }
 }
 

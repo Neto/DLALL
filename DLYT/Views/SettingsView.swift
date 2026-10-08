@@ -56,7 +56,7 @@ struct SettingsView: View {
                         Text(option.title).tag(option)
                     }
                 }
-                Text("Instagram, alguns vídeos do TikTok e vídeos privados do Vimeo só funcionam se você já estiver logado no navegador. O DLYT não vê sua senha — só pede ao yt-dlp que leia os cookies locais.")
+                Text("Automático tenta sem cookies e, se o site pedir login (YouTube, Instagram, TikTok, Vimeo privado), usa os cookies do Safari, Chrome ou outro navegador onde você já está logado. O DLYT não vê sua senha, só lê os cookies locais. Para o Safari, o DLYT precisa de Full Disk Access em System Settings > Privacy & Security.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

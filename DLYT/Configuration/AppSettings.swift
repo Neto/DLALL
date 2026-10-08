@@ -43,8 +43,8 @@ final class AppSettings {
         self.defaults = defaults
         let qualityRaw = defaults.string(forKey: Keys.quality) ?? VideoQuality.best.rawValue
         defaultQuality = VideoQuality(rawValue: qualityRaw) ?? .best
-        let cookiesRaw = defaults.string(forKey: Keys.cookies) ?? BrowserCookies.none.rawValue
-        cookiesBrowser = BrowserCookies(rawValue: cookiesRaw) ?? .none
+        let cookiesRaw = defaults.string(forKey: Keys.cookies) ?? BrowserCookies.auto.rawValue
+        cookiesBrowser = BrowserCookies(rawValue: cookiesRaw) ?? .auto
         openWhenDone = defaults.object(forKey: Keys.openWhenDone) as? Bool ?? false
         revealWhenDone = defaults.object(forKey: Keys.revealWhenDone) as? Bool ?? true
         customYTDLPPath = defaults.string(forKey: Keys.ytDlpPath) ?? ""
