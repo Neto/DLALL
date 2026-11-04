@@ -56,7 +56,7 @@ struct ComposerView: View {
                         .padding(.horizontal, 16)
                         .frame(height: pillHeight)
                         .foregroundStyle(model.canSubmit ? Color.white : Color.white.opacity(0.4))
-                        .glassPill(Capsule(), tint: model.canSubmit ? DLYTTheme.indigo : nil, interactive: model.canSubmit)
+                        .glassPill(Capsule(), tint: model.canSubmit ? BaixaTudoTheme.indigo : nil, interactive: model.canSubmit)
                         .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)

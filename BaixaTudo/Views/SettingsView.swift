@@ -56,7 +56,7 @@ struct SettingsView: View {
                         Text(option.title).tag(option)
                     }
                 }
-                Text("Automático tenta sem cookies e, se o site pedir login (YouTube, Instagram, TikTok, Vimeo privado), usa os cookies do Safari, Chrome ou outro navegador onde você já está logado. O DLYT não vê sua senha, só lê os cookies locais. Para o Safari, o DLYT precisa de Full Disk Access em System Settings > Privacy & Security.")
+                Text("Automático tenta sem cookies e, se o site pedir login (YouTube, Instagram, TikTok, Vimeo privado), usa os cookies do Safari, Chrome ou outro navegador onde você já está logado. O BaixaTudo não vê sua senha, só lê os cookies locais. Para o Safari, o BaixaTudo precisa de Full Disk Access em System Settings > Privacy & Security.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -107,7 +107,7 @@ struct SettingsView: View {
                     .onChange(of: settings.customYTDLPPath) {
                         model.refreshEngine()
                     }
-                Text("Em branco, o DLYT usa as ferramentas que vêm dentro do app.")
+                Text("Em branco, o BaixaTudo usa as ferramentas que vêm dentro do app.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -124,7 +124,7 @@ struct SettingsView: View {
             }
 
             Section("Versão") {
-                LabeledContent("DLYT") {
+                LabeledContent("BaixaTudo") {
                     Text(AppVersion.full)
                         .textSelection(.enabled)
                 }

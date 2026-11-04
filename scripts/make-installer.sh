@@ -1,14 +1,14 @@
 #!/bin/zsh
-# Gera DLYT.pkg assinado e notarizado (abre com duplo clique em qualquer Mac Apple Silicon).
+# Gera BaixaTudo.pkg assinado e notarizado (abre com duplo clique em qualquer Mac Apple Silicon).
 # Pré-requisitos (uma vez):
 #   1) Certificado "Developer ID Installer: Mentor Neto (FDWHNL3X82)" no Keychain
-#   2) xcrun notarytool store-credentials "DLYT" --apple-id <email> --team-id FDWHNL3X82 --password <senha de app>
+#   2) xcrun notarytool store-credentials "BaixaTudo" --apple-id <email> --team-id FDWHNL3X82 --password <senha de app>
 set -euo pipefail
 
 TEAM="FDWHNL3X82"
 APP_ID="Developer ID Application: Mentor Neto (${TEAM})"
 PKG_ID="Developer ID Installer: Mentor Neto (${TEAM})"
-NOTARY_PROFILE="DLYT"
+NOTARY_PROFILE="BaixaTudo"
 
 if [[ -d /Applications/Xcode-beta.app/Contents/Developer ]]; then
   export DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer
@@ -16,7 +16,7 @@ elif [[ -d /Applications/Xcode.app/Contents/Developer ]]; then
   export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 fi
 
-PROJ="${HOME}/ARDUINO/XCODE/DLYT"
+PROJ="${HOME}/ARDUINO/XCODE/BaixaTudo"
 cd "$PROJ"
 
 # --- Pré-checagens (falha cedo, antes de compilar) ---
@@ -37,7 +37,7 @@ if command -v xcodegen >/dev/null 2>&1; then
   xcodegen generate
 fi
 
-xcodebuild -project DLYT.xcodeproj -scheme DLYT -configuration Release \
+xcodebuild -project BaixaTudo.xcodeproj -scheme BaixaTudo -configuration Release \
   -destination 'platform=macOS,arch=arm64' \
   CODE_SIGN_IDENTITY="$APP_ID" \
   CODE_SIGN_STYLE=Manual \
@@ -45,11 +45,11 @@ xcodebuild -project DLYT.xcodeproj -scheme DLYT -configuration Release \
   build
 
 APP="$(/usr/bin/find "${HOME}/Library/Developer/Xcode/DerivedData" \
-  -path '*/Build/Products/Release/DLYT.app' -type d -print0 2>/dev/null \
+  -path '*/Build/Products/Release/BaixaTudo.app' -type d -print0 2>/dev/null \
   | xargs -0 ls -dt 2>/dev/null | /usr/bin/head -1)"
 
 if [[ ! -d "$APP" ]]; then
-  print -u2 "Release DLYT.app não encontrado."
+  print -u2 "Release BaixaTudo.app não encontrado."
   exit 1
 fi
 
@@ -77,7 +77,7 @@ for b in yt-dlp deno; do
 done
 # app por último
 codesign --force --options runtime --timestamp \
-  --entitlements "$PROJ/DLYT/DLYT.entitlements" \
+  --entitlements "$PROJ/BaixaTudo/BaixaTudo.entitlements" \
   --sign "$APP_ID" "$APP"
 
 codesign --verify --deep --strict --verbose=2 "$APP"
@@ -90,42 +90,42 @@ codesign --verify --deep --strict --verbose=2 "$APP"
 
 "$PROJ/scripts/install-to-applications.sh" "$APP"
 
-STAGE="/tmp/dlyt-pkgroot"
+STAGE="/tmp/baixatudo-pkgroot"
 rm -rf "$STAGE"
 mkdir -p "$STAGE"
-ditto "$APP" "$STAGE/DLYT.app"
+ditto "$APP" "$STAGE/BaixaTudo.app"
 
-PKG_DIR="/tmp/dlyt-pkg"
+PKG_DIR="/tmp/baixatudo-pkg"
 rm -rf "$PKG_DIR"
 mkdir -p "$PKG_DIR"
 
 MARKETING="$(defaults read "$APP/Contents/Info" CFBundleShortVersionString)"
 BUILD="$(defaults read "$APP/Contents/Info" CFBundleVersion)"
 
-pkgbuild --identifier com.spinoff.DLYT \
+pkgbuild --identifier com.spinoff.BaixaTudo \
   --version "$MARKETING" \
   --install-location /Applications \
-  --component "$STAGE/DLYT.app" \
-  "$PKG_DIR/DLYT-component.pkg"
+  --component "$STAGE/BaixaTudo.app" \
+  "$PKG_DIR/BaixaTudo-component.pkg"
 
 cat > "$PKG_DIR/distribution.xml" << EOF
 <?xml version="1.0" encoding="utf-8"?>
 <installer-gui-script minSpecVersion="2">
-    <title>DLYT</title>
+    <title>BaixaTudo</title>
     <organization>com.spinoff</organization>
     <options customize="never" require-scripts="false" hostArchitectures="arm64"/>
     <welcome file="welcome.html" mime-type="text/html"/>
-    <pkg-ref id="com.spinoff.DLYT"/>
+    <pkg-ref id="com.spinoff.BaixaTudo"/>
     <choices-outline>
         <line choice="default">
-            <line choice="com.spinoff.DLYT"/>
+            <line choice="com.spinoff.BaixaTudo"/>
         </line>
     </choices-outline>
     <choice id="default"/>
-    <choice id="com.spinoff.DLYT" visible="false">
-        <pkg-ref id="com.spinoff.DLYT"/>
+    <choice id="com.spinoff.BaixaTudo" visible="false">
+        <pkg-ref id="com.spinoff.BaixaTudo"/>
     </choice>
-    <pkg-ref id="com.spinoff.DLYT" version="$MARKETING" onConclusion="none">DLYT-component.pkg</pkg-ref>
+    <pkg-ref id="com.spinoff.BaixaTudo" version="$MARKETING" onConclusion="none">BaixaTudo-component.pkg</pkg-ref>
 </installer-gui-script>
 EOF
 
@@ -133,8 +133,8 @@ cp "$PROJ/scripts/installer/welcome.html" "$PKG_DIR/welcome.html"
 
 ARCHIVE_DIR="${PROJ}/dist"
 mkdir -p "$ARCHIVE_DIR"
-ARCHIVED_PKG="${ARCHIVE_DIR}/DLYT-${MARKETING}-${BUILD}.pkg"
-OUT_PKG="${HOME}/Desktop/DLYT.pkg"
+ARCHIVED_PKG="${ARCHIVE_DIR}/BaixaTudo-${MARKETING}-${BUILD}.pkg"
+OUT_PKG="${HOME}/Desktop/BaixaTudo.pkg"
 
 productbuild --distribution "$PKG_DIR/distribution.xml" \
   --package-path "$PKG_DIR" \

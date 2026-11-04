@@ -1,9 +1,9 @@
 #!/usr/bin/env swift
 import AppKit
 
-let root = URL(fileURLWithPath: "/Users/neto/ARDUINO/XCODE/DLYT")
+let root = URL(fileURLWithPath: "/Users/neto/ARDUINO/XCODE/BaixaTudo")
 let source = root.appendingPathComponent("Design/AppIconSource.jpg")
-let outDir = root.appendingPathComponent("DLYT/Assets.xcassets/AppIcon.appiconset")
+let outDir = root.appendingPathComponent("BaixaTudo/Assets.xcassets/AppIcon.appiconset")
 try FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
 
 guard let sourceImage = NSImage(contentsOf: source), sourceImage.isValid else {

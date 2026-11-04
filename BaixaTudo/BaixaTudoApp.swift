@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct DLYTApp: App {
+struct BaixaTudoApp: App {
     @State private var settings: AppSettings
     @State private var model: LibraryModel
 
@@ -24,7 +24,7 @@ struct DLYTApp: App {
         .windowResizability(.contentMinSize)
         .commands {
             CommandGroup(replacing: .appInfo) {
-                Button("Sobre o DLYT") {
+                Button("Sobre o BaixaTudo") {
                     AppVersion.showAboutPanel()
                 }
             }

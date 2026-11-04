@@ -97,10 +97,19 @@ struct JobRowView: View {
                 .controlSize(.small)
         case .downloading(let fraction, let speed, let eta):
             VStack(alignment: .leading, spacing: 4) {
-                ProgressView(value: fraction)
-                    .progressViewStyle(.linear)
+                if let fraction {
+                    ProgressView(value: fraction)
+                        .progressViewStyle(.linear)
+                } else {
+                    ProgressView()
+                        .progressViewStyle(.linear)
+                }
                 HStack {
-                    Text(fraction.formatted(.percent.precision(.fractionLength(0))))
+                    if let fraction {
+                        Text(fraction.formatted(.percent.precision(.fractionLength(0))))
+                    } else {
+                        Text("Baixando…")
+                    }
                     if let speed { Text(speed) }
                     if let eta { Text("resta \(eta)") }
                 }
@@ -168,7 +177,11 @@ struct JobRowView: View {
         switch job.status {
         case .fetchingInfo: parts.append("buscando informações")
         case .downloading(let fraction, _, _):
-            parts.append("baixando \(Int(fraction * 100)) por cento")
+            if let fraction {
+                parts.append("baixando \(Int(fraction * 100)) por cento")
+            } else {
+                parts.append("baixando")
+            }
         case .processing: parts.append("processando")
         case .completed: parts.append("concluído")
         case .failed(let message): parts.append("falhou: \(message)")

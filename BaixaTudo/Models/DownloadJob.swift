@@ -2,7 +2,7 @@ import Foundation
 
 enum JobStatus: Equatable, Sendable {
     case fetchingInfo
-    case downloading(fraction: Double, speed: String?, eta: String?)
+    case downloading(fraction: Double?, speed: String?, eta: String?)
     case processing
     case completed
     case failed(String)
@@ -64,7 +64,8 @@ struct DownloadJob: Identifiable, Equatable, Sendable {
 }
 
 struct DownloadProgress: Sendable, Equatable {
-    var fraction: Double
+    /// nil quando o yt-dlp não sabe o tamanho total (CDN sem Content-Length, comum no Instagram/TikTok).
+    var fraction: Double?
     var speed: String?
     var eta: String?
     var isProcessing: Bool

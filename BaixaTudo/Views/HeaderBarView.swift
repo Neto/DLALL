@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum DLYTTheme {
+enum BaixaTudoTheme {
     static let base = Color(red: 0.03, green: 0.03, blue: 0.05)
     static let indigo = Color(red: 0.17, green: 0.13, blue: 0.48)
     static let indigoDeep = Color(red: 0.10, green: 0.08, blue: 0.30)
@@ -15,7 +15,7 @@ extension View {
             let base: Glass = tint.map { Glass.regular.tint($0) } ?? .regular
             self.glassEffect(interactive ? base.interactive() : base, in: shape)
         } else {
-            self.background(shape.fill(tint?.opacity(0.5) ?? DLYTTheme.pill))
+            self.background(shape.fill(tint?.opacity(0.5) ?? BaixaTudoTheme.pill))
         }
     }
 }
@@ -31,7 +31,7 @@ struct HeaderBarView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
-                Text("DLYT")
+                Text("BaixaTudo")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(.white)
 
@@ -71,8 +71,8 @@ struct HeaderBarView: View {
                 .fill(
                     LinearGradient(
                         stops: [
-                            .init(color: DLYTTheme.indigo, location: 0),
-                            .init(color: DLYTTheme.indigoDeep, location: 0.5),
+                            .init(color: BaixaTudoTheme.indigo, location: 0),
+                            .init(color: BaixaTudoTheme.indigoDeep, location: 0.5),
                             .init(color: Color.black, location: 1),
                         ],
                         startPoint: .top,
@@ -94,5 +94,5 @@ struct HeaderBarView: View {
         .environment(LibraryModel(settings: settings))
         .padding(8)
         .frame(width: 760, height: 200)
-        .background(DLYTTheme.base)
+        .background(BaixaTudoTheme.base)
 }

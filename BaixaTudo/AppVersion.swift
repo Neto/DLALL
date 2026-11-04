@@ -28,7 +28,7 @@ enum AppVersion {
     @MainActor
     static func showAboutPanel() {
         NSApplication.shared.orderFrontStandardAboutPanel(options: [
-            .applicationName: "DLYT",
+            .applicationName: "BaixaTudo",
             .applicationVersion: marketing,
             .version: "Build \(build) — \(buildStamp)",
             .credits: NSAttributedString(

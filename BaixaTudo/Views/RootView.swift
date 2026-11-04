@@ -33,13 +33,13 @@ struct RootView: View {
                 }
             }
             .ignoresSafeArea(.container, edges: .top)
-            .navigationTitle("DLYT")
+            .navigationTitle("BaixaTudo")
             .toolbar(removing: .title)
             .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
             .onDrop(of: [.url, .plainText], isTargeted: nil, perform: handleDrop)
             .onAppear { model.quality = settings.defaultQuality }
             .frame(minWidth: 640, minHeight: 460)
-            .containerBackground(for: .window) { DLYTTheme.base }
+            .containerBackground(for: .window) { BaixaTudoTheme.base }
             .preferredColorScheme(.dark)
         }
     }

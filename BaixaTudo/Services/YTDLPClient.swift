@@ -12,9 +12,9 @@ enum YTDLPError: LocalizedError, Sendable {
     var errorDescription: String? {
         switch self {
         case .binaryMissing:
-            "Faltam os componentes de download neste app. Reinstale o DLYT."
+            "Faltam os componentes de download neste app. Reinstale o BaixaTudo."
         case .ffmpegMissing:
-            "Falta o conversor de vídeo neste app. Reinstale o DLYT."
+            "Falta o conversor de vídeo neste app. Reinstale o BaixaTudo."
         case .invalidURL:
             "URL inválida."
         case .cancelled:
@@ -34,9 +34,9 @@ enum YTDLPClient: Sendable {
         "%(.{id,title,thumbnail,duration,uploader,channel,webpage_url,original_url,extractor,extractor_key})j"
 
     static let loginMessage =
-        "Este link exige login. Entre na sua conta no Safari ou no Chrome (o DLYT usa os cookies do navegador sozinho) e tente de novo."
+        "Este link exige login. Entre na sua conta no Safari ou no Chrome (o BaixaTudo usa os cookies do navegador sozinho) e tente de novo."
     static let permissionMessage =
-        "O DLYT não conseguiu ler os cookies do navegador. Abra System Settings > Privacy & Security > Full Disk Access, ative o DLYT e tente de novo."
+        "O BaixaTudo não conseguiu ler os cookies do navegador. Abra System Settings > Privacy & Security > Full Disk Access, ative o BaixaTudo e tente de novo."
 
     static func cookieCandidates(for cookies: BrowserCookies) -> [BrowserCookies] {
         cookies == .auto ? [.none] + BrowserCookies.automaticChain : [cookies]
@@ -318,7 +318,7 @@ enum YTDLPClient: Sendable {
 
         guard let ffmpeg = BinaryLocator.findFFmpeg() else { throw YTDLPError.ffmpegMissing }
         let temp = url.deletingLastPathComponent()
-            .appendingPathComponent(".\(url.deletingPathExtension().lastPathComponent).dlyt-qt.mp4")
+            .appendingPathComponent(".\(url.deletingPathExtension().lastPathComponent).baixatudo-qt.mp4")
 
         var videoArgs: [String]
         if videoOK {
@@ -545,7 +545,7 @@ enum YTDLPClient: Sendable {
     static func friendlyMessage(from log: String, url: String) -> String {
         let lower = log.lowercased()
         if lower.contains("vimeo"), lower.contains("password") {
-            return "Este vídeo do Vimeo tem senha. O DLYT ainda não aceita vídeos protegidos por senha."
+            return "Este vídeo do Vimeo tem senha. O BaixaTudo ainda não aceita vídeos protegidos por senha."
         }
         if lower.contains("vimeo"), lower.contains("referer") || lower.contains("embedding") {
             return "Este vídeo do Vimeo só toca incorporado em outro site. Abra a página do site que o exibe e cole o link dessa página."
@@ -587,7 +587,7 @@ enum YTDLPClient: Sendable {
     }
 }
 
-/// Registro simples em ~/Library/Logs/DLYT.log para diagnosticar falhas (cookies, permissões, bot check).
+/// Registro simples em ~/Library/Logs/BaixaTudo.log para diagnosticar falhas (cookies, permissões, bot check).
 enum DiagnosticLog: Sendable {
     private static let lock = NSLock()
 
@@ -598,7 +598,7 @@ enum DiagnosticLog: Sendable {
         defer { lock.unlock() }
         let dir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        let url = dir.appendingPathComponent("DLYT.log")
+        let url = dir.appendingPathComponent("BaixaTudo.log")
         if let handle = try? FileHandle(forWritingTo: url) {
             defer { try? handle.close() }
             _ = try? handle.seekToEnd()
@@ -790,6 +790,18 @@ enum ProgressParser {
                     eta: nil,
                     isProcessing: false,
                     destinationPath: destination
+                )
+            }
+            // Tamanho total desconhecido (CDN sem Content-Length): yt-dlp só informa
+            // bytes e velocidade, sem %. Sem isso a barra fica presa em 0% até concluir.
+            if ns.range(of: "[download]", options: .caseInsensitive).location != NSNotFound,
+               let speed = firstCapture(speedRegex, in: ns) {
+                return DownloadProgress(
+                    fraction: nil,
+                    speed: speed,
+                    eta: firstCapture(etaRegex, in: ns),
+                    isProcessing: false,
+                    destinationPath: nil
                 )
             }
             return nil

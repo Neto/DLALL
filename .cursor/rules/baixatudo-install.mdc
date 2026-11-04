@@ -1,0 +1,21 @@
+---
+description: Instalar BaixaTudo em /Applications, arquivar o .pkg e deixar um novo na Mesa
+alwaysApply: true
+---
+
+# BaixaTudo — instalar, arquivar, Mesa
+
+O app publicado é **sempre** `/Applications/BaixaTudo.app`. Versão nova **substitui** esse path. Nunca `BaixaTudo 2.app`.
+
+Arquivo permanente dos instaladores: **`dist/BaixaTudo-{MARKETING}-{BUILD}.pkg`** (ex.: `dist/BaixaTudo-1.4-5.pkg`).
+
+Depois de qualquer mudança de código do app:
+
+1. Atualize a versão em `project.yml` (`MARKETING_VERSION` / `CURRENT_PROJECT_VERSION`) e rode `xcodegen generate`.
+2. Publique com `./scripts/make-installer.sh` (não só o Debug local). Esse script:
+   - substitui `/Applications/BaixaTudo.app`
+   - grava `dist/BaixaTudo-{versão}-{build}.pkg`
+   - deixa **`~/Desktop/BaixaTudo.pkg`** — o da vez, para mandar aos amigos
+3. Relance `/Applications/BaixaTudo.app`.
+
+Não declare a tarefa concluída sem o replace em `/Applications` e o `.pkg` novo na Mesa **e** em `dist/`.

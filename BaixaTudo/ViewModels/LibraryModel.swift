@@ -49,10 +49,10 @@ final class LibraryModel {
                     banner = nil
                 }
             } else {
-                engineStatus = .missing("Falta o conversor de vídeo neste app. Reinstale o DLYT.")
+                engineStatus = .missing("Falta o conversor de vídeo neste app. Reinstale o BaixaTudo.")
             }
         } else {
-            engineStatus = .missing("Faltam os componentes de download neste app. Reinstale o DLYT.")
+            engineStatus = .missing("Faltam os componentes de download neste app. Reinstale o BaixaTudo.")
         }
     }
 

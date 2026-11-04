@@ -1,0 +1,454 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B46160503911BB0E69450FA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35084081169267C19F6265E6 /* SettingsView.swift */; };
+		0F9F990E3FCADD7C5DDF74E8 /* JobRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85F7868329898BFA43BD977 /* JobRowView.swift */; };
+		44B3897729D5F2F1F5C515F5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80490FEDECF5974DC1990D37 /* RootView.swift */; };
+		655BAEC9AA605EF0982C7336 /* ComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857275D5B6F69E189F2CEF23 /* ComposerView.swift */; };
+		946C9B98BD274A4A5C9B6D05 /* HeaderBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9FE2FF541EC4D339262B12 /* HeaderBarView.swift */; };
+		980CE0653AF3A3EABB97B2B9 /* MediaPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C06088D7E011A0D60AB98 /* MediaPlatform.swift */; };
+		98F021089E206A949F438F06 /* AppVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB384BF3E0E92025EEFE122 /* AppVersion.swift */; };
+		9C1E59BC31011C33054E299B /* LibraryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BA3043DEA36148A446A387 /* LibraryModel.swift */; };
+		9EEEAD1BC514122671A1246F /* DownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3E7BBC95D6C4C8FE264221 /* DownloadJob.swift */; };
+		BC54DF36C6D3E82A1954908E /* VideoQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = C708C8A44FDE74220BA6B76F /* VideoQuality.swift */; };
+		C60AB18543ECBB991CF4D737 /* BrowserCookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D94CCD03C82443F2B938AB1 /* BrowserCookies.swift */; };
+		CDB632058E1EF95A16DD5125 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741D6B548645543A3B67E355 /* AppSettings.swift */; };
+		D74B3E6E747E3E5CEB7B2E82 /* VideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0499F1D9279175078CF5008 /* VideoInfo.swift */; };
+		D899980CD5056F2542F49C63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91E38F60CA25D2184B2A2DB0 /* Assets.xcassets */; };
+		DF8DFB5F5384ABDF56B87FDA /* BaixaTudoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D086C58CF1B69C8BAB211B52 /* BaixaTudoApp.swift */; };
+		EE399221C7D565B3170BA512 /* YTDLPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D241C4A1B56297384D3A4F /* YTDLPClient.swift */; };
+		F6D2DF423743B039219A5FB8 /* BinaryLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC1A6BCF079460BB4BDCC43 /* BinaryLocator.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3297E8ED22744E59614AEE82 /* BaixaTudo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BaixaTudo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		35084081169267C19F6265E6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		5CB384BF3E0E92025EEFE122 /* AppVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersion.swift; sourceTree = "<group>"; };
+		5E3E7BBC95D6C4C8FE264221 /* DownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadJob.swift; sourceTree = "<group>"; };
+		66D241C4A1B56297384D3A4F /* YTDLPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTDLPClient.swift; sourceTree = "<group>"; };
+		73BA3043DEA36148A446A387 /* LibraryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryModel.swift; sourceTree = "<group>"; };
+		741D6B548645543A3B67E355 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		7B9FE2FF541EC4D339262B12 /* HeaderBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBarView.swift; sourceTree = "<group>"; };
+		7D94CCD03C82443F2B938AB1 /* BrowserCookies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserCookies.swift; sourceTree = "<group>"; };
+		80490FEDECF5974DC1990D37 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		857275D5B6F69E189F2CEF23 /* ComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerView.swift; sourceTree = "<group>"; };
+		91E38F60CA25D2184B2A2DB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A0499F1D9279175078CF5008 /* VideoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoInfo.swift; sourceTree = "<group>"; };
+		AEC1A6BCF079460BB4BDCC43 /* BinaryLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryLocator.swift; sourceTree = "<group>"; };
+		C708C8A44FDE74220BA6B76F /* VideoQuality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoQuality.swift; sourceTree = "<group>"; };
+		D01C06088D7E011A0D60AB98 /* MediaPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlatform.swift; sourceTree = "<group>"; };
+		D086C58CF1B69C8BAB211B52 /* BaixaTudoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaixaTudoApp.swift; sourceTree = "<group>"; };
+		EDFBF033AB3CEC651D8B9F07 /* BaixaTudo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BaixaTudo.entitlements; sourceTree = "<group>"; };
+		F85F7868329898BFA43BD977 /* JobRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobRowView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2D0C7EAD6C5AB56FBBE78289 /* BaixaTudo */ = {
+			isa = PBXGroup;
+			children = (
+				5CB384BF3E0E92025EEFE122 /* AppVersion.swift */,
+				91E38F60CA25D2184B2A2DB0 /* Assets.xcassets */,
+				EDFBF033AB3CEC651D8B9F07 /* BaixaTudo.entitlements */,
+				D086C58CF1B69C8BAB211B52 /* BaixaTudoApp.swift */,
+				CCBFF250876DF3DE63F2B58A /* Configuration */,
+				A5F27FFAACAFF281DE1F049C /* Models */,
+				C1BFF141C935419E1F60EEF0 /* Services */,
+				E2EBDD3BEBEF4BDA4AAF195B /* ViewModels */,
+				3BA4FE0FCCE3FBE763D6290F /* Views */,
+			);
+			path = BaixaTudo;
+			sourceTree = "<group>";
+		};
+		3BA4FE0FCCE3FBE763D6290F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				857275D5B6F69E189F2CEF23 /* ComposerView.swift */,
+				7B9FE2FF541EC4D339262B12 /* HeaderBarView.swift */,
+				F85F7868329898BFA43BD977 /* JobRowView.swift */,
+				80490FEDECF5974DC1990D37 /* RootView.swift */,
+				35084081169267C19F6265E6 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A5F27FFAACAFF281DE1F049C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7D94CCD03C82443F2B938AB1 /* BrowserCookies.swift */,
+				5E3E7BBC95D6C4C8FE264221 /* DownloadJob.swift */,
+				D01C06088D7E011A0D60AB98 /* MediaPlatform.swift */,
+				A0499F1D9279175078CF5008 /* VideoInfo.swift */,
+				C708C8A44FDE74220BA6B76F /* VideoQuality.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B907852DAF0A1F2EEDADF60A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3297E8ED22744E59614AEE82 /* BaixaTudo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BBC0041A5EED9D5C4EC0AEA2 = {
+			isa = PBXGroup;
+			children = (
+				2D0C7EAD6C5AB56FBBE78289 /* BaixaTudo */,
+				B907852DAF0A1F2EEDADF60A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C1BFF141C935419E1F60EEF0 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AEC1A6BCF079460BB4BDCC43 /* BinaryLocator.swift */,
+				66D241C4A1B56297384D3A4F /* YTDLPClient.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		CCBFF250876DF3DE63F2B58A /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				741D6B548645543A3B67E355 /* AppSettings.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		E2EBDD3BEBEF4BDA4AAF195B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				73BA3043DEA36148A446A387 /* LibraryModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		79C4628840297BFE1E8AFC41 /* BaixaTudo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 35548E49FD556F36D7387F8C /* Build configuration list for PBXNativeTarget "BaixaTudo" */;
+			buildPhases = (
+				623CD3449DEA693D5376E328 /* Sources */,
+				A5224F0CEE19B71636401440 /* Resources */,
+				717F486F6E5957CFB66CB752 /* Embed Helpers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BaixaTudo;
+			packageProductDependencies = (
+			);
+			productName = BaixaTudo;
+			productReference = 3297E8ED22744E59614AEE82 /* BaixaTudo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4FEE023DCF8226FB86045AB9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					79C4628840297BFE1E8AFC41 = {
+						DevelopmentTeam = NDCT2T4D7G;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0EFC4B31997025B24565BC2E /* Build configuration list for PBXProject "BaixaTudo" */;
+			developmentRegion = "pt-BR";
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				"pt-BR",
+			);
+			mainGroup = BBC0041A5EED9D5C4EC0AEA2;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B907852DAF0A1F2EEDADF60A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				79C4628840297BFE1E8AFC41 /* BaixaTudo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A5224F0CEE19B71636401440 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D899980CD5056F2542F49C63 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		717F486F6E5957CFB66CB752 /* Embed Helpers */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Helpers";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n# Copia yt-dlp, ffmpeg, ffprobe e deno (Vendor/Helpers) para dentro do app recém-buildado.\n# Não toca em /Applications.\nset -e\n\nif [ -n \"${TARGET_BUILD_DIR:-}\" ] && [ -n \"${FULL_PRODUCT_NAME:-}\" ]; then\n  APP=\"${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\"\n  case \"${TARGET_BUILD_DIR}\" in\n    *Index.noindex*|*Preview*|*Previews*)\n      exit 0\n      ;;\n  esac\nelse\n  APP=\"${1:-}\"\nfi\n\nif [ -z \"$APP\" ] || [ ! -d \"$APP\" ]; then\n  echo \"BaixaTudo.app não encontrado para empacotar helpers.\" >&2\n  exit 1\nfi\n\nif [ ! -f \"$APP/Contents/Info.plist\" ]; then\n  echo \"Pacote inválido: $APP\" >&2\n  exit 1\nfi\n\nHELPERS_SRC=\"\"\nif [ -n \"${SRCROOT:-}\" ] && [ -d \"${SRCROOT}/Vendor/Helpers\" ]; then\n  HELPERS_SRC=\"${SRCROOT}/Vendor/Helpers\"\nelif [ -d \"$(dirname \"$0\")/../Vendor/Helpers\" ]; then\n  HELPERS_SRC=\"$(cd \"$(dirname \"$0\")/../Vendor/Helpers\" && pwd)\"\nfi\nif [ -n \"$HELPERS_SRC\" ] && [ -x \"$HELPERS_SRC/yt-dlp\" ] && [ ! -x \"$APP/Contents/Helpers/yt-dlp\" ]; then\n  /bin/mkdir -p \"$APP/Contents/Helpers\"\n  /usr/bin/rsync -a \"$HELPERS_SRC/\" \"$APP/Contents/Helpers/\"\n  if [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ] && [ \"${EXPANDED_CODE_SIGN_IDENTITY}\" != \"-\" ]; then\n    ENT=\"${CODE_SIGN_ENTITLEMENTS:-}\"\n    if [ -n \"${SRCROOT:-}\" ] && [ -f \"${SRCROOT}/BaixaTudo/BaixaTudo.entitlements\" ]; then\n      ENT=\"${SRCROOT}/BaixaTudo/BaixaTudo.entitlements\"\n    fi\n    if [ -n \"$ENT\" ] && [ -f \"$ENT\" ]; then\n      /usr/bin/codesign --force --deep --options runtime --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --entitlements \"$ENT\" \"$APP\" >/dev/null 2>&1 || true\n    else\n      /usr/bin/codesign --force --deep --options runtime --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP\" >/dev/null 2>&1 || true\n    fi\n  fi\nfi\n\necho \"Helpers embutidos em: $APP/Contents/Helpers\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		623CD3449DEA693D5376E328 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDB632058E1EF95A16DD5125 /* AppSettings.swift in Sources */,
+				98F021089E206A949F438F06 /* AppVersion.swift in Sources */,
+				DF8DFB5F5384ABDF56B87FDA /* BaixaTudoApp.swift in Sources */,
+				F6D2DF423743B039219A5FB8 /* BinaryLocator.swift in Sources */,
+				C60AB18543ECBB991CF4D737 /* BrowserCookies.swift in Sources */,
+				655BAEC9AA605EF0982C7336 /* ComposerView.swift in Sources */,
+				9EEEAD1BC514122671A1246F /* DownloadJob.swift in Sources */,
+				946C9B98BD274A4A5C9B6D05 /* HeaderBarView.swift in Sources */,
+				0F9F990E3FCADD7C5DDF74E8 /* JobRowView.swift in Sources */,
+				9C1E59BC31011C33054E299B /* LibraryModel.swift in Sources */,
+				980CE0653AF3A3EABB97B2B9 /* MediaPlatform.swift in Sources */,
+				44B3897729D5F2F1F5C515F5 /* RootView.swift in Sources */,
+				0B46160503911BB0E69450FA /* SettingsView.swift in Sources */,
+				D74B3E6E747E3E5CEB7B2E82 /* VideoInfo.swift in Sources */,
+				BC54DF36C6D3E82A1954908E /* VideoQuality.swift in Sources */,
+				EE399221C7D565B3170BA512 /* YTDLPClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		191DB5C49A1648636F3AE875 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BaixaTudo/BaixaTudo.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = BaixaTudo;
+				INFOPLIST_KEY_CFBundleName = BaixaTudo;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSMinimumSystemVersion = 15.0;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "O BaixaTudo usa o Safari só quando você ativa cookies do navegador, para baixar vídeos da sua conta.";
+				INFOPLIST_KEY_NSHighResolutionCapable = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Spinoff";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.baixatudo.BaixaTudo;
+				PRODUCT_NAME = BaixaTudo;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Release;
+		};
+		B3071872281AD0CB0FC6FCC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 8;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = NDCT2T4D7G;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.5.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		D28D02E968CA99DB2DDC8205 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BaixaTudo/BaixaTudo.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = BaixaTudo;
+				INFOPLIST_KEY_CFBundleName = BaixaTudo;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSMinimumSystemVersion = 15.0;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "O BaixaTudo usa o Safari só quando você ativa cookies do navegador, para baixar vídeos da sua conta.";
+				INFOPLIST_KEY_NSHighResolutionCapable = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Spinoff";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.baixatudo.BaixaTudo;
+				PRODUCT_NAME = BaixaTudo;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Debug;
+		};
+		F8653334FD3EAE8283F7DC36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 8;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = NDCT2T4D7G;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.5.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0EFC4B31997025B24565BC2E /* Build configuration list for PBXProject "BaixaTudo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F8653334FD3EAE8283F7DC36 /* Debug */,
+				B3071872281AD0CB0FC6FCC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		35548E49FD556F36D7387F8C /* Build configuration list for PBXNativeTarget "BaixaTudo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D28D02E968CA99DB2DDC8205 /* Debug */,
+				191DB5C49A1648636F3AE875 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4FEE023DCF8226FB86045AB9 /* Project object */;
+}
