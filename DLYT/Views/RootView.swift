@@ -18,18 +18,33 @@ struct RootView: View {
 
                 engineBar
 
-                if model.jobs.isEmpty {
-                    EmptyQueueView()
-                } else {
-                    List {
-                        ForEach(model.jobs) { job in
-                            JobRowView(job: job)
-                                .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
-                        }
+                Picker("Seção", selection: $model.selectedTab) {
+                    ForEach(AppTab.allCases) { tab in
+                        Text(tab.title).tag(tab)
                     }
-                    .listStyle(.inset)
-                    .scrollContentBackground(.hidden)
-                    .alternatingRowBackgrounds(.disabled)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .frame(maxWidth: 260)
+                .padding(.vertical, 8)
+
+                switch model.selectedTab {
+                case .downloads:
+                    if model.jobs.isEmpty {
+                        EmptyQueueView()
+                    } else {
+                        List {
+                            ForEach(model.jobs) { job in
+                                JobRowView(job: job)
+                                    .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                            }
+                        }
+                        .listStyle(.inset)
+                        .scrollContentBackground(.hidden)
+                        .alternatingRowBackgrounds(.disabled)
+                    }
+                case .history:
+                    HistoryView()
                 }
             }
             .ignoresSafeArea(.container, edges: .top)

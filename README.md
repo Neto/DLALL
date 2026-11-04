@@ -11,6 +11,7 @@ Use DLYT only with content that you have the right to download.
 * Video output uses H.264 and AAC, so QuickTime can open the file. If the site has no H.264 stream, DLYT converts the file.
 * Optional browser cookies (Safari) for videos that need a signed in account. This also helps with the YouTube bot check.
 * Download queue with a row for each job.
+* History tab. DLYT saves each finished download. You can search the list, download a link again, show the file in Finder, copy the URL, or remove an entry.
 
 ## Requirements
 
@@ -42,8 +43,8 @@ xcodebuild -project DLYT.xcodeproj -scheme DLYT -configuration Debug \
 ## Project layout
 
 * `DLYT/Models`: platform detection, quality options, download jobs
-* `DLYT/Services`: `yt-dlp` client and helper binary locator
-* `DLYT/ViewModels`: library of jobs
+* `DLYT/Services`: `yt-dlp` client, helper binary locator, and history storage
+* `DLYT/ViewModels`: library of jobs and history
 * `DLYT/Views`: SwiftUI views
 * `scripts`: helper bundling, install, and installer scripts
 * `project.yml`: XcodeGen project definition

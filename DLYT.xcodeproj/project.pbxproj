@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A842BC6D9AF8A7F1E7D575A /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5098C393C0B03D79BE830C58 /* HistoryView.swift */; };
 		163AB48C1ECCEAFB847ECF4B /* JobRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE886231EDD56D7BB359186 /* JobRowView.swift */; };
 		19A5AA714C8860C864325B4B /* YTDLPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD24413602CBEEC40AFB700F /* YTDLPClient.swift */; };
 		1ECE56BFB27450BA759D1EF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A2631D058C559E31846424A /* Assets.xcassets */; };
@@ -18,10 +19,12 @@
 		726D91C097760F3D9EAED02D /* BrowserCookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2526F15A6ABF75086FD80E9D /* BrowserCookies.swift */; };
 		A2656711B1798DC65B430F17 /* LibraryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C87891A625AC511500CD96 /* LibraryModel.swift */; };
 		A64CCCD4508A476E903A6737 /* VideoQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA9419AFD665A0292614309 /* VideoQuality.swift */; };
+		B63A49CC7BBBA3AFF1DAC9A9 /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B45021E4283C51DE96F742 /* HistoryStore.swift */; };
 		B6654ED0A32D1B3D78EC02AE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D09B939779F036E0EA7B3E2 /* RootView.swift */; };
 		D042123EB69E94ADAFFB488D /* AppVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECFA4287C8421B6C85BAA96 /* AppVersion.swift */; };
 		D464E1A390B0420102156E2F /* DownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8596A36C00EFEB2482938E /* DownloadJob.swift */; };
 		E0DB8C424864F69EF568D808 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E235B573409A6CB2883A5ABB /* SettingsView.swift */; };
+		E4BF1EDA5216673736948536 /* HistoryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA75DCFC99E41EF94B08DAE /* HistoryEntry.swift */; };
 		F7A44B0851970CF2915064CF /* DLYTApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8574A99F51E5659A40BB5011 /* DLYTApp.swift */; };
 		FA45AB64B2DD9A785C17E35D /* VideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B255CBA0D6E151D808707C /* VideoInfo.swift */; };
 /* End PBXBuildFile section */
@@ -33,8 +36,10 @@
 		1A2631D058C559E31846424A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2526F15A6ABF75086FD80E9D /* BrowserCookies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserCookies.swift; sourceTree = "<group>"; };
 		2D42FF1BC134CC744C688FA1 /* ComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerView.swift; sourceTree = "<group>"; };
+		34B45021E4283C51DE96F742 /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
 		3ECFA4287C8421B6C85BAA96 /* AppVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersion.swift; sourceTree = "<group>"; };
 		41B255CBA0D6E151D808707C /* VideoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoInfo.swift; sourceTree = "<group>"; };
+		5098C393C0B03D79BE830C58 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		56102DF1360C0A4DC8FDFB1C /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		61C87891A625AC511500CD96 /* LibraryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryModel.swift; sourceTree = "<group>"; };
 		6CA9419AFD665A0292614309 /* VideoQuality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoQuality.swift; sourceTree = "<group>"; };
@@ -42,6 +47,7 @@
 		8574A99F51E5659A40BB5011 /* DLYTApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DLYTApp.swift; sourceTree = "<group>"; };
 		8A6A0F949BE15DBC17DDA457 /* MediaPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlatform.swift; sourceTree = "<group>"; };
 		B6F0F244B4954D2D833058BD /* HeaderBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBarView.swift; sourceTree = "<group>"; };
+		DAA75DCFC99E41EF94B08DAE /* HistoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryEntry.swift; sourceTree = "<group>"; };
 		DFC2B9FC6EBEFF068EC8E7E9 /* BinaryLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryLocator.swift; sourceTree = "<group>"; };
 		E235B573409A6CB2883A5ABB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		ED8596A36C00EFEB2482938E /* DownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadJob.swift; sourceTree = "<group>"; };
@@ -94,6 +100,7 @@
 			children = (
 				2526F15A6ABF75086FD80E9D /* BrowserCookies.swift */,
 				ED8596A36C00EFEB2482938E /* DownloadJob.swift */,
+				DAA75DCFC99E41EF94B08DAE /* HistoryEntry.swift */,
 				8A6A0F949BE15DBC17DDA457 /* MediaPlatform.swift */,
 				41B255CBA0D6E151D808707C /* VideoInfo.swift */,
 				6CA9419AFD665A0292614309 /* VideoQuality.swift */,
@@ -105,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				DFC2B9FC6EBEFF068EC8E7E9 /* BinaryLocator.swift */,
+				34B45021E4283C51DE96F742 /* HistoryStore.swift */,
 				FD24413602CBEEC40AFB700F /* YTDLPClient.swift */,
 			);
 			path = Services;
@@ -123,6 +131,7 @@
 			children = (
 				2D42FF1BC134CC744C688FA1 /* ComposerView.swift */,
 				B6F0F244B4954D2D833058BD /* HeaderBarView.swift */,
+				5098C393C0B03D79BE830C58 /* HistoryView.swift */,
 				6CE886231EDD56D7BB359186 /* JobRowView.swift */,
 				0D09B939779F036E0EA7B3E2 /* RootView.swift */,
 				E235B573409A6CB2883A5ABB /* SettingsView.swift */,
@@ -231,6 +240,9 @@
 				F7A44B0851970CF2915064CF /* DLYTApp.swift in Sources */,
 				D464E1A390B0420102156E2F /* DownloadJob.swift in Sources */,
 				2BC39988D706FC12874DDBDC /* HeaderBarView.swift in Sources */,
+				E4BF1EDA5216673736948536 /* HistoryEntry.swift in Sources */,
+				B63A49CC7BBBA3AFF1DAC9A9 /* HistoryStore.swift in Sources */,
+				0A842BC6D9AF8A7F1E7D575A /* HistoryView.swift in Sources */,
 				163AB48C1ECCEAFB847ECF4B /* JobRowView.swift in Sources */,
 				A2656711B1798DC65B430F17 /* LibraryModel.swift in Sources */,
 				5293C7DDA9698603869E1C5C /* MediaPlatform.swift in Sources */,
@@ -279,7 +291,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = FDWHNL3X82;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -299,7 +311,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -345,7 +357,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FDWHNL3X82;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -359,7 +371,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -9,6 +9,8 @@ final class LibraryModel {
     var quality: VideoQuality
     var engineStatus: EngineStatus = .unknown
     var banner: String?
+    var history: [HistoryEntry] = HistoryStore.load()
+    var selectedTab: AppTab = .downloads
 
     private let settings: AppSettings
     private var tasks: [UUID: Task<Void, Never>] = [:]
@@ -122,16 +124,84 @@ final class LibraryModel {
         NSPasteboard.general.setString(job.sourceURL, forType: .string)
     }
 
+    // MARK: - Histórico
+
+    func redownload(_ id: UUID) {
+        guard let entry = history.first(where: { $0.id == id }) else { return }
+        if startJob(url: entry.sourceURL, quality: entry.quality) {
+            selectedTab = .downloads
+        }
+    }
+
+    func removeHistory(_ id: UUID) {
+        history.removeAll { $0.id == id }
+        HistoryStore.save(history)
+    }
+
+    func clearHistory() {
+        history.removeAll()
+        HistoryStore.save(history)
+    }
+
+    func revealHistory(_ id: UUID) {
+        guard let path = history.first(where: { $0.id == id })?.outputPath,
+              FileManager.default.fileExists(atPath: path) else { return }
+        NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: path)])
+    }
+
+    func copyHistoryURL(_ id: UUID) {
+        guard let entry = history.first(where: { $0.id == id }) else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(entry.sourceURL, forType: .string)
+    }
+
+    /// Um registro por URL. Baixar o mesmo link de novo atualiza o registro e sobe para o topo.
+    private func recordHistory(_ job: DownloadJob) {
+        let now = Date.now
+        let title = job.info?.title ?? job.sourceURL
+        if let index = history.firstIndex(where: { $0.sourceURL == job.sourceURL }) {
+            var entry = history.remove(at: index)
+            entry.title = title
+            entry.platform = job.platform
+            entry.quality = job.quality
+            entry.uploader = job.info?.uploader ?? entry.uploader
+            entry.thumbnailURL = job.info?.thumbnailURL ?? entry.thumbnailURL
+            entry.outputPath = job.outputURL?.path
+            entry.lastDownloadedAt = now
+            entry.downloadCount += 1
+            history.insert(entry, at: 0)
+        } else {
+            history.insert(
+                HistoryEntry(
+                    id: UUID(),
+                    sourceURL: job.sourceURL,
+                    title: title,
+                    platform: job.platform,
+                    quality: job.quality,
+                    uploader: job.info?.uploader,
+                    thumbnailURL: job.info?.thumbnailURL,
+                    outputPath: job.outputURL?.path,
+                    firstDownloadedAt: now,
+                    lastDownloadedAt: now,
+                    downloadCount: 1
+                ),
+                at: 0
+            )
+        }
+        HistoryStore.save(history)
+    }
+
     // MARK: - Private
 
-    private func startJob(url: String, quality: VideoQuality) {
+    @discardableResult
+    private func startJob(url: String, quality: VideoQuality) -> Bool {
         refreshEngine()
         if isEngineMissing {
             banner = {
                 if case .missing(let message) = engineStatus { return message }
                 return nil
             }()
-            return
+            return false
         }
 
         let job = DownloadJob(
@@ -201,6 +271,9 @@ final class LibraryModel {
                     current.status = .completed
                     current.finishedAt = .now
                 }
+                if let finished = self.jobs.first(where: { $0.id == id }) {
+                    self.recordHistory(finished)
+                }
                 if settings.revealWhenDone {
                     NSWorkspace.shared.activateFileViewerSelecting([file])
                 }
@@ -240,6 +313,7 @@ final class LibraryModel {
             self.tasks[id] = nil
         }
         tasks[id] = task
+        return true
     }
 
     private func update(_ id: UUID, mutate: (inout DownloadJob) -> Void) {
