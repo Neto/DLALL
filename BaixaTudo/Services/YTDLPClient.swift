@@ -31,7 +31,7 @@ enum YTDLPError: LocalizedError, Sendable {
 
 enum YTDLPClient: Sendable {
     private static let infoJSONFields =
-        "%(.{id,title,thumbnail,duration,uploader,channel,webpage_url,original_url,extractor,extractor_key})j"
+        "%(.{id,title,thumbnail,duration,uploader,channel,webpage_url,original_url,extractor,extractor_key,formats})j"
 
     static let loginMessage =
         "Este link exige login. Entre na sua conta no Safari ou no Chrome (o BaixaTudo usa os cookies do navegador sozinho) e tente de novo."
@@ -194,7 +194,7 @@ enum YTDLPClient: Sendable {
             arguments += ["-x", "--audio-format", "mp3", "--audio-quality", "0"]
         } else {
             arguments += [
-                "-S", "vcodec:h264,res,acodec:mp4a,ext:mp4:m4a",
+                "-S", "res,vcodec:h264,acodec:mp4a,ext:mp4:m4a",
                 "--merge-output-format", "mp4",
             ]
         }
@@ -237,7 +237,7 @@ enum YTDLPClient: Sendable {
         }
 
         if quality.prefersQuickTime {
-            return try await ensureQuickTimeCompatible(file, onProgress: onProgress)
+            return try await ensureQuickTimeCompatible(file, targetFPS: quality.targetFPS, onProgress: onProgress)
         }
         return file
     }
@@ -296,6 +296,7 @@ enum YTDLPClient: Sendable {
 
     private static func ensureQuickTimeCompatible(
         _ url: URL,
+        targetFPS: Int?,
         onProgress: @escaping @Sendable (DownloadProgress) -> Void
     ) async throws -> URL {
         let probe = try await probeMedia(url)
@@ -320,11 +321,14 @@ enum YTDLPClient: Sendable {
         let temp = url.deletingLastPathComponent()
             .appendingPathComponent(".\(url.deletingPathExtension().lastPathComponent).baixatudo-qt.mp4")
 
+        // `-r` só se aplica reconvertendo; com `-c:v copy` ffmpeg recusa mudar o fps.
+        let fpsArgs = (videoOK ? nil : targetFPS).map { ["-r", "\($0)"] } ?? []
+
         var videoArgs: [String]
         if videoOK {
             videoArgs = ["-c:v", "copy"]
         } else {
-            videoArgs = ["-c:v", "h264_videotoolbox", "-b:v", "8M", "-allow_sw", "1", "-tag:v", "avc1"]
+            videoArgs = fpsArgs + ["-c:v", "h264_videotoolbox", "-b:v", "8M", "-allow_sw", "1", "-tag:v", "avc1"]
         }
         let audioArgs = audioOK
             ? ["-c:a", "copy"]
@@ -361,7 +365,7 @@ enum YTDLPClient: Sendable {
         var result = try await runFFmpeg(video: videoArgs)
         if result.status != 0, !videoOK {
             result = try await runFFmpeg(
-                video: ["-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p"]
+                video: fpsArgs + ["-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p"]
             )
         }
         if result.status != 0 {

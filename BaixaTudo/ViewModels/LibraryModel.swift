@@ -5,13 +5,22 @@ import Foundation
 @MainActor
 final class LibraryModel {
     var jobs: [DownloadJob] = []
-    var draftURL: String = ""
+    var draftURL: String = "" {
+        didSet {
+            guard draftURL != oldValue else { return }
+            scheduleQualityProbe()
+        }
+    }
     var quality: VideoQuality
+    /// Opções do seletor para o URL atual; vazio enquanto não há URL válido ou a busca não terminou.
+    var availableQualities: [VideoQuality] = []
+    var isProbingQuality = false
     var engineStatus: EngineStatus = .unknown
     var banner: String?
 
     private let settings: AppSettings
     private var tasks: [UUID: Task<Void, Never>] = [:]
+    private var probeTask: Task<Void, Never>?
 
     enum EngineStatus: Equatable {
         case unknown
@@ -26,6 +35,7 @@ final class LibraryModel {
 
     var canSubmit: Bool {
         URLExtractor.firstHTTPURL(in: draftURL) != nil && !isEngineMissing
+            && !isProbingQuality && !availableQualities.isEmpty
     }
 
     var isEngineMissing: Bool {
@@ -124,6 +134,51 @@ final class LibraryModel {
 
     // MARK: - Private
 
+    /// Busca os formatos disponíveis do URL colado para popular o seletor de qualidade
+    /// e pré-selecionar o maior H.264 encontrado. Enquanto roda, o seletor e o botão
+    /// de baixar ficam desabilitados (ver `canSubmit`).
+    private func scheduleQualityProbe() {
+        probeTask?.cancel()
+        guard let url = URLExtractor.firstHTTPURL(in: draftURL) else {
+            probeTask = nil
+            isProbingQuality = false
+            availableQualities = []
+            return
+        }
+
+        isProbingQuality = true
+        availableQualities = []
+        let settings = self.settings
+        probeTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(350))
+            guard !Task.isCancelled, let self else { return }
+            do {
+                let info = try await YTDLPClient.fetchInfo(
+                    url: url,
+                    customBinary: settings.customYTDLPPath,
+                    cookies: settings.cookiesBrowser
+                )
+                guard !Task.isCancelled else { return }
+                if let maxHeight = info.availableHeights.max() {
+                    self.availableQualities = VideoQuality.options(
+                        forMaxHeight: maxHeight,
+                        highFPSHeights: info.highFPSHeights
+                    )
+                    self.quality = info.bestH264Height.map(VideoQuality.bestH264Tier(forHeight:)) ?? .best
+                } else {
+                    // Extrator não informou formatos (ou falhou em listá-los): cai nas opções genéricas.
+                    self.availableQualities = VideoQuality.allCases
+                    self.quality = settings.defaultQuality
+                }
+            } catch {
+                guard !Task.isCancelled else { return }
+                self.availableQualities = VideoQuality.allCases
+                self.quality = settings.defaultQuality
+            }
+            self.isProbingQuality = false
+        }
+    }
+
     private func startJob(url: String, quality: VideoQuality) {
         refreshEngine()
         if isEngineMissing {
@@ -201,6 +256,7 @@ final class LibraryModel {
                     current.status = .completed
                     current.finishedAt = .now
                 }
+                Self.playCompletionSound()
                 if settings.revealWhenDone {
                     NSWorkspace.shared.activateFileViewerSelecting([file])
                 }
@@ -245,5 +301,11 @@ final class LibraryModel {
     private func update(_ id: UUID, mutate: (inout DownloadJob) -> Void) {
         guard let index = jobs.firstIndex(where: { $0.id == id }) else { return }
         mutate(&jobs[index])
+    }
+
+    /// Avisa que terminou (download + conversão, se teve).
+    private static func playCompletionSound() {
+        guard let url = Bundle.main.url(forResource: "Funk", withExtension: "aiff") else { return }
+        NSSound(contentsOf: url, byReference: true)?.play()
     }
 }

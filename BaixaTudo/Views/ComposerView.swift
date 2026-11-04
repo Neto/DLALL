@@ -27,25 +27,26 @@ struct ComposerView: View {
 
                 Menu {
                     Picker("Qualidade", selection: $model.quality) {
-                        ForEach(VideoQuality.allCases) { option in
+                        ForEach(model.availableQualities) { option in
                             Text(option.title).tag(option)
                         }
                     }
                     .pickerStyle(.inline)
                 } label: {
                     HStack(spacing: 6) {
-                        Text(model.quality.title)
+                        Text(qualityLabel)
                         Image(systemName: "chevron.up.chevron.down")
                             .font(.caption2)
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(model.availableQualities.isEmpty ? Color.white.opacity(0.4) : Color.white)
                     .padding(.horizontal, 14)
                     .frame(height: pillHeight)
-                    .glassPill(Capsule())
+                    .glassPill(Capsule(), interactive: !model.availableQualities.isEmpty)
                     .contentShape(Capsule())
                 }
                 .menuStyle(.borderlessButton)
                 .menuIndicator(.hidden)
+                .disabled(model.availableQualities.isEmpty)
                 .fixedSize()
                 .accessibilityLabel("Qualidade")
                 .help("Qualidade do arquivo baixado.")
@@ -88,6 +89,12 @@ struct ComposerView: View {
         .onAppear {
             urlFocused = true
         }
+    }
+
+    private var qualityLabel: String {
+        if model.isProbingQuality { return "Buscando…" }
+        if model.availableQualities.isEmpty { return "Qualidade" }
+        return model.quality.title
     }
 
     @ViewBuilder

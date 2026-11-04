@@ -8,6 +8,12 @@ struct VideoInfo: Sendable, Equatable {
     var uploader: String?
     var webpageURL: String?
     var extractor: String?
+    /// Heights distintos encontrados nos formatos (qualquer codec), do maior pro menor.
+    var availableHeights: [Int] = []
+    /// Maior height com um formato H.264 (avc1) disponível.
+    var bestH264Height: Int?
+    /// Heights que têm algum formato com fps > 30 (ex: 2160p60).
+    var highFPSHeights: Set<Int> = []
     /// Cookies que funcionaram na busca; o download reaproveita.
     var resolvedCookies: BrowserCookies = .none
 
@@ -36,9 +42,10 @@ struct YTDLPInfoDTO: Decodable, Sendable {
     var originalUrl: String?
     var extractor: String?
     var extractorKey: String?
+    var formats: [YTDLPFormatDTO]?
 
     enum CodingKeys: String, CodingKey {
-        case id, title, thumbnail, duration, uploader, channel, extractor
+        case id, title, thumbnail, duration, uploader, channel, extractor, formats
         case webpageUrl = "webpage_url"
         case originalUrl = "original_url"
         case extractorKey = "extractor_key"
@@ -55,6 +62,7 @@ struct YTDLPInfoDTO: Decodable, Sendable {
         originalUrl = try c.decodeIfPresent(String.self, forKey: .originalUrl)
         extractor = try c.decodeIfPresent(String.self, forKey: .extractor)
         extractorKey = try c.decodeIfPresent(String.self, forKey: .extractorKey)
+        formats = try c.decodeIfPresent([YTDLPFormatDTO].self, forKey: .formats)
         if let value = try? c.decode(Double.self, forKey: .duration) {
             duration = value
         } else if let value = try? c.decode(Int.self, forKey: .duration) {
@@ -66,6 +74,12 @@ struct YTDLPInfoDTO: Decodable, Sendable {
 
     func asVideoInfo(fallbackURL: String) -> VideoInfo {
         let thumb = thumbnail.flatMap(URL.init(string:))
+        let videoFormats = (formats ?? []).filter { ($0.height ?? 0) > 0 && $0.vcodec != "none" }
+        let heights = Set(videoFormats.compactMap(\.height)).sorted(by: >)
+        let h264Heights = videoFormats
+            .filter { $0.vcodec?.hasPrefix("avc1") == true || $0.vcodec?.hasPrefix("h264") == true }
+            .compactMap(\.height)
+        let highFPSHeights = Set(videoFormats.filter { ($0.fps ?? 0) > 30 }.compactMap(\.height))
         return VideoInfo(
             id: id ?? UUID().uuidString,
             title: (title?.trimmingCharacters(in: .whitespacesAndNewlines)).flatMap { $0.isEmpty ? nil : $0 }
@@ -74,7 +88,17 @@ struct YTDLPInfoDTO: Decodable, Sendable {
             duration: duration,
             uploader: uploader ?? channel,
             webpageURL: webpageUrl ?? originalUrl ?? fallbackURL,
-            extractor: extractorKey ?? extractor
+            extractor: extractorKey ?? extractor,
+            availableHeights: heights,
+            bestH264Height: h264Heights.max(),
+            highFPSHeights: highFPSHeights
         )
     }
+}
+
+/// Subconjunto de um item de `formats` no JSON do `yt-dlp -J`.
+struct YTDLPFormatDTO: Decodable, Sendable {
+    var height: Int?
+    var vcodec: String?
+    var fps: Double?
 }
