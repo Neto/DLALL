@@ -9,10 +9,8 @@ struct RootView: View {
 
         NavigationStack {
             VStack(spacing: 0) {
-                ComposerView()
-                    .padding(16)
-
-                Divider()
+                HeaderBarView()
+                    .padding(.bottom, 4)
 
                 if let banner = model.banner {
                     bannerBar(banner)
@@ -30,29 +28,19 @@ struct RootView: View {
                         }
                     }
                     .listStyle(.inset)
+                    .scrollContentBackground(.hidden)
                     .alternatingRowBackgrounds(.disabled)
                 }
             }
+            .ignoresSafeArea(.container, edges: .top)
             .navigationTitle("DLYT")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    if model.activeCount > 0 {
-                        Text(model.activeCount == 1 ? "1 em andamento" : "\(model.activeCount) em andamento")
-                            .foregroundStyle(.secondary)
-                            .font(.callout)
-                    }
-                }
-                ToolbarItem(placement: .automatic) {
-                    Button("Limpar Concluídos", systemImage: "trash") {
-                        model.clearFinished()
-                    }
-                    .disabled(!model.jobs.contains { $0.status.isFinished })
-                    .help("Remove da lista os itens já concluídos, cancelados ou com erro.")
-                }
-            }
+            .toolbar(removing: .title)
+            .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
             .onDrop(of: [.url, .plainText], isTargeted: nil, perform: handleDrop)
             .onAppear { model.quality = settings.defaultQuality }
             .frame(minWidth: 640, minHeight: 460)
+            .containerBackground(for: .window) { DLYTTheme.base }
+            .preferredColorScheme(.dark)
         }
     }
 

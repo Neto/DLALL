@@ -10,6 +10,7 @@
 		163AB48C1ECCEAFB847ECF4B /* JobRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE886231EDD56D7BB359186 /* JobRowView.swift */; };
 		19A5AA714C8860C864325B4B /* YTDLPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD24413602CBEEC40AFB700F /* YTDLPClient.swift */; };
 		1ECE56BFB27450BA759D1EF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A2631D058C559E31846424A /* Assets.xcassets */; };
+		2BC39988D706FC12874DDBDC /* HeaderBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F0F244B4954D2D833058BD /* HeaderBarView.swift */; };
 		338A7AD73581D0B533FCE738 /* BinaryLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC2B9FC6EBEFF068EC8E7E9 /* BinaryLocator.swift */; };
 		494D6C24D4E4F65361542FDA /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56102DF1360C0A4DC8FDFB1C /* AppSettings.swift */; };
 		50F4D156D5BDFBA72510C6BE /* ComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D42FF1BC134CC744C688FA1 /* ComposerView.swift */; };
@@ -40,6 +41,7 @@
 		6CE886231EDD56D7BB359186 /* JobRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobRowView.swift; sourceTree = "<group>"; };
 		8574A99F51E5659A40BB5011 /* DLYTApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DLYTApp.swift; sourceTree = "<group>"; };
 		8A6A0F949BE15DBC17DDA457 /* MediaPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlatform.swift; sourceTree = "<group>"; };
+		B6F0F244B4954D2D833058BD /* HeaderBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBarView.swift; sourceTree = "<group>"; };
 		DFC2B9FC6EBEFF068EC8E7E9 /* BinaryLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryLocator.swift; sourceTree = "<group>"; };
 		E235B573409A6CB2883A5ABB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		ED8596A36C00EFEB2482938E /* DownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadJob.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				2D42FF1BC134CC744C688FA1 /* ComposerView.swift */,
+				B6F0F244B4954D2D833058BD /* HeaderBarView.swift */,
 				6CE886231EDD56D7BB359186 /* JobRowView.swift */,
 				0D09B939779F036E0EA7B3E2 /* RootView.swift */,
 				E235B573409A6CB2883A5ABB /* SettingsView.swift */,
@@ -227,6 +230,7 @@
 				50F4D156D5BDFBA72510C6BE /* ComposerView.swift in Sources */,
 				F7A44B0851970CF2915064CF /* DLYTApp.swift in Sources */,
 				D464E1A390B0420102156E2F /* DownloadJob.swift in Sources */,
+				2BC39988D706FC12874DDBDC /* HeaderBarView.swift in Sources */,
 				163AB48C1ECCEAFB847ECF4B /* JobRowView.swift in Sources */,
 				A2656711B1798DC65B430F17 /* LibraryModel.swift in Sources */,
 				5293C7DDA9698603869E1C5C /* MediaPlatform.swift in Sources */,
@@ -275,7 +279,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = FDWHNL3X82;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -295,7 +299,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.5.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -341,7 +345,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FDWHNL3X82;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -355,7 +359,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.5.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
