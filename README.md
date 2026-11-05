@@ -1,88 +1,92 @@
 # BaixaTudo
 
-Aplicativo para macOS que baixa vídeos, áudio e conteúdos do Instagram a partir de links, com interface nativa em SwiftUI.
+**English** | [Português (Brasil)](README.pt-BR.md)
 
-O BaixaTudo é uma evolução do [DLYT, projeto original de Mentor Neto](https://github.com/Neto/DLYT). Esta versão acrescenta melhorias na seleção de qualidade, downloads de fotos e carrosséis do Instagram, suporte experimental a Stories e configurações separadas de cookies para vídeos e Stories. Os créditos e o histórico de autoria do projeto original foram preservados.
+A macOS app for downloading videos, audio, and Instagram content from links, with a native SwiftUI interface.
 
-Use apenas com conteúdos que você tem autorização para baixar.
+BaixaTudo builds on [DLYT, originally created by Mentor Neto](https://github.com/Neto/DLYT). This version adds improved quality selection, Instagram photo and carousel downloads, experimental Stories support, and separate cookie settings for videos and Stories. The original project's credits and authorship history have been preserved.
 
-## Recursos
+Only download content you have permission to download.
 
-- Downloads de YouTube, Instagram, TikTok, Vimeo e outros sites compatíveis com o yt-dlp. A disponibilidade varia conforme o site e o conteúdo.
-- Seleção de qualidade por vídeo, incluindo até 4K quando disponível, e extração de áudio em MP3.
-- Saída de vídeo em H.264 + AAC para reprodução no QuickTime; conversão quando necessária.
-- Fotos e carrosséis do Instagram, além de Stories e destaques com suporte experimental.
-- Fila de downloads, pasta de destino configurável e opções para mostrar ou abrir o arquivo ao concluir.
-- yt-dlp, ffmpeg, ffprobe e deno empacotados no aplicativo compilado.
+## Features
 
-## Requisitos e instalação
+- Downloads from YouTube, Instagram, TikTok, Vimeo, and other yt-dlp-compatible sites. Availability varies by site and content.
+- Per-video quality selection, including up to 4K when available, and MP3 audio extraction.
+- H.264 + AAC video output for QuickTime playback, with conversion when needed.
+- Instagram photos and carousels, plus experimental support for Stories and highlights.
+- Download queue, configurable destination folder, and options to reveal or open completed files.
+- yt-dlp, ffmpeg, ffprobe, and deno bundled with the compiled app.
 
-- Mac com Apple Silicon (arm64).
-- macOS 15 ou posterior.
+## Requirements and installation
 
-O código está disponível neste repositório. Pacotes de instalação, quando publicados, ficam em [Releases](https://github.com/rcava/BaixaTudo/releases). Para compilar sua própria cópia, veja abaixo.
+- Mac with Apple Silicon (arm64).
+- macOS 15 or later.
 
-## Como usar
+Source code is available in this repository. Installer packages, when published, are available under [Releases](https://github.com/rcava/BaixaTudo/releases). To build your own copy, see below.
 
-Cole o link, escolha a qualidade disponível e inicie o download. Os arquivos são salvos em Downloads por padrão; a pasta pode ser alterada nas preferências.
+## Usage
 
-Se o conteúdo exigir login, configure os cookies do navegador conforme a seção seguinte.
+Paste a link, select an available quality, and start the download. Files are saved to Downloads by default; you can change the destination in preferences.
 
-## Preferências e cookies
+If the content requires login, configure browser cookies as described below.
 
-Cookies podem conter informações da sua sessão. O BaixaTudo usa o yt-dlp para ler os cookies do navegador selecionado e utilizá-los nas solicitações ao site de origem. Não é necessário digitar sua senha no aplicativo.
+## Preferences and browser cookies
 
-### Cookies para vídeos
+Cookies may contain session information. BaixaTudo uses yt-dlp to read cookies from the selected browser and include them in requests to the source website. You do not need to enter your password in the app.
 
-Esta opção vale para YouTube, Reels, posts do Instagram e outros links.
+The app currently uses Portuguese labels for most preferences. The original labels are included below to help you find them.
 
-| Opção | Comportamento |
+### Cookies for videos
+
+**Cookies para vídeos** applies to YouTube, Reels, Instagram posts, and other links.
+
+| Option | Behavior |
 | --- | --- |
-| Nenhum | Não lê cookies do navegador. É o padrão para vídeos e o ponto de partida para conteúdo público. |
-| Automático | Tenta sem login primeiro e pode recorrer aos navegadores se necessário. |
-| Navegador específico | Usa os cookies desse navegador. |
+| None (Nenhum) | Does not read browser cookies. This is the default for videos and the starting point for public content. |
+| Automatic (Automático) | Tries without login first and may fall back to browsers if needed. |
+| A specific browser | Uses cookies from that browser. |
 
-As opções de navegador são Safari, Brave, Chrome, Firefox e Edge. Entre na conta pelo navegador antes de tentar baixar um conteúdo que exige login.
+Available browsers are Safari, Brave, Chrome, Firefox, and Edge. Sign in through the browser before attempting to download content that requires login.
 
-### Cookies para Instagram Stories
+### Cookies for Instagram Stories
 
-Stories de imagem e vídeo, incluindo destaques, usam uma configuração independente: **Cookies para Instagram Stories**. Selecione um navegador em que você esteja conectado ao Instagram e tenha acesso ao conteúdo. Essa opção usa somente o navegador escolhido.
+Image and video Stories, including highlights, use a separate setting: **Cookies para Instagram Stories**. Select a browser where you are signed in to Instagram and have access to the content. This setting uses only the selected browser.
 
-O padrão em uma instalação nova é Brave; altere se você usa outro navegador. Selecionar um navegador não garante que a sessão será aceita pelo Instagram.
+The default on a fresh installation is Brave; change it if you use another browser. Selecting a browser does not guarantee that Instagram will accept its session.
 
-Para ler os cookies do Safari, o aplicativo precisa de **Acesso Total ao Disco**, em Ajustes do Sistema → Privacidade e Segurança. Essa permissão permite acesso amplo a arquivos protegidos; conceda apenas se quiser utilizar esse recurso e confiar na sua cópia do aplicativo.
+Reading Safari cookies requires **Full Disk Access**, under System Settings → Privacy & Security. This permission provides broad access to protected files; grant it only if you want to use this feature and trust your copy of the app.
 
-### Outras preferências
+### Other preferences
 
-Em **Geral**, você pode escolher a pasta de destino, a qualidade padrão e se deseja mostrar ou abrir os arquivos ao concluir. Em **Motor**, pode consultar as ferramentas encontradas e, opcionalmente, indicar outro executável do yt-dlp. Deixe esse caminho vazio para usar o que acompanha o aplicativo.
+Under **Geral** (General), you can choose the destination folder, default quality, and whether to reveal or open completed files. Under **Motor** (Engine), you can check the detected tools and optionally specify another yt-dlp executable. Leave that path empty to use the bundled copy.
 
-## Limitações e solução de problemas
+## Limitations and troubleshooting
 
-Os sites podem mudar suas regras e interfaces, causando falhas mesmo em links que funcionavam antes. A qualidade depende do conteúdo disponibilizado na origem. Conversões de vídeo podem levar tempo.
+Websites may change their rules and interfaces, causing previously working links to fail. Available quality depends on the source content. Video conversion can take time.
 
-O suporte a Stories é experimental e usa uma adaptação específica do extrator do yt-dlp. Cookies válidos localmente não garantem acesso ao conteúdo. O aplicativo não concede acesso a conteúdos que sua conta não pode visualizar.
+Stories support is experimental and uses a customized yt-dlp extractor. Locally available cookies do not guarantee access to content. The app does not grant access to content your account cannot view.
 
-Se um download exigir login, confira o navegador selecionado e se a conta está conectada nele. Em caso de erro na leitura dos cookies do Safari, confira a permissão de Acesso Total ao Disco.
+If a download requires login, check the selected browser and make sure you are signed in there. If Safari cookie extraction fails, check Full Disk Access permissions.
 
-### Diagnóstico
+### Diagnostics
 
-Em Preferências → Motor, **Registrar diagnóstico detalhado** registra informações sobre as ferramentas e os erros. Ele começa desligado em Release e ligado por padrão em Debug, salvo preferências já gravadas. **Mostrar logs no Finder** abre `~/Library/Logs/BaixaTudo/`. O resumo de erros fica em `~/Library/Logs/BaixaTudo.log`.
+Under Preferences → **Motor**, **Registrar diagnóstico detalhado** (Enable detailed diagnostics) records tool information and errors. It starts disabled in Release builds and enabled by default in Debug builds, subject to saved preferences. **Mostrar logs no Finder** (Show logs in Finder) opens `~/Library/Logs/BaixaTudo/`. A short error summary is stored at `~/Library/Logs/BaixaTudo.log`.
 
-O diagnóstico filtra valores conhecidos de cookies, tokens e credenciais, além de parâmetros e fragmentos de URLs. Revise os logs antes de compartilhar: eles ainda podem conter caminhos locais e informações sobre o conteúdo. O modo detalhado usa zero tentativas internas de repetição no yt-dlp; o fallback entre navegadores ainda pode ocorrer no modo Automático.
+Diagnostics filter known cookie, token, and credential values, as well as URL query strings and fragments. Review logs before sharing: they may still contain local paths and content information. Detailed mode uses zero internal retries in yt-dlp; browser fallback may still occur in Automatic mode.
 
-**Check Instagram session (offline)** procura o cookie de sessão no navegador escolhido para Stories. A verificação não acessa o Instagram, não exibe o valor do cookie e não confirma sua aceitação pelo servidor. Ela gera um log mesmo com o diagnóstico detalhado desligado.
+**Check Instagram session (offline)** looks for the session cookie in the browser selected for Stories. It does not contact Instagram, display the cookie value, or confirm server acceptance. It creates a log even when detailed diagnostics are disabled.
 
-Nunca publique cookies, senhas ou tokens em relatos de erro.
+Never publish cookies, passwords, or tokens in bug reports.
 
-## Compilar a partir do código
+## Build from source
 
-Você precisa de Xcode com as ferramentas de linha de comando e Homebrew. Instale as dependências:
+You need Xcode with its command-line tools and Homebrew. Install the dependencies:
 
 ```zsh
 brew install xcodegen ffmpeg deno dylibbundler python@3.11
 ```
 
-Clone e compile:
+Clone and build:
 
 ```zsh
 git clone https://github.com/rcava/BaixaTudo.git
@@ -93,17 +97,17 @@ xcodebuild -project BaixaTudo.xcodeproj -scheme BaixaTudo -configuration Debug \
   -destination 'platform=macOS,arch=arm64' build
 ```
 
-O script de empacotamento baixa dependências e copia as ferramentas para `Vendor/Helpers`, que não faz parte do repositório. Execute-o antes da primeira compilação. Ele pressupõe Homebrew em `/opt/homebrew`.
+The bundling script downloads dependencies and copies the tools into `Vendor/Helpers`, which is excluded from the repository. Run it before your first build. It assumes Homebrew is installed at `/opt/homebrew`.
 
-`build-and-install.zsh` compila e revela o aplicativo no Finder. Arraste o `.app` para Aplicativos para instalar.
+`build-and-install.zsh` builds the app and reveals it in Finder. Drag the `.app` to Applications to install it.
 
-### Instalador assinado
+### Signed installer
 
-`scripts/make-installer.sh` gera um pacote assinado e notarizado. Ele exige certificados Developer ID Application e Developer ID Installer e um perfil do notarytool chamado `BaixaTudo`. Os identificadores de equipe e nomes de certificados herdados do autor original precisam ser adaptados para sua conta. Certificados e chaves privadas não são fornecidos no repositório.
+`scripts/make-installer.sh` creates a signed and notarized package. It requires Developer ID Application and Developer ID Installer certificates, plus a notarytool profile named `BaixaTudo`. The team identifiers and certificate names inherited from the original author must be adapted to your account. Certificates and private keys are not provided in this repository.
 
-### Verificações locais
+### Local checks
 
-Os testes abaixo verificam diagnóstico e fixtures locais; não confirmam downloads reais do Instagram:
+The following tests check diagnostics and local fixtures; they do not verify live Instagram downloads:
 
 ```sh
 xcrun swiftc -swift-version 6 -D DEBUG BaixaTudo/Services/DiagnosticLog.swift tests/DiagnosticLogTests.swift -o /tmp/baixatudo-diagnostic-tests
@@ -112,33 +116,33 @@ python3 tests/test_session_diagnostic.py
 python3 tests/test_instagram_stories.py
 ```
 
-## Estrutura
+## Project layout
 
-| Pasta ou arquivo | Conteúdo |
+| Folder or file | Contents |
 | --- | --- |
-| `BaixaTudo/Models` | Plataformas, qualidades e trabalhos de download |
-| `BaixaTudo/Services` | Integração com yt-dlp, ferramentas e diagnóstico |
-| `BaixaTudo/ViewModels` | Estado e gerenciamento da fila |
-| `BaixaTudo/Views` | Interface SwiftUI |
-| `scripts` | Empacotamento, compilação e instalador |
-| `tests` | Verificações locais e fixtures |
-| `project.yml` | Definição do projeto XcodeGen |
+| `BaixaTudo/Models` | Platforms, quality options, and download jobs |
+| `BaixaTudo/Services` | yt-dlp integration, tools, and diagnostics |
+| `BaixaTudo/ViewModels` | State and queue management |
+| `BaixaTudo/Views` | SwiftUI interface |
+| `scripts` | Bundling, builds, and installer |
+| `tests` | Local checks and fixtures |
+| `project.yml` | XcodeGen project definition |
 
-Tecnologias: Swift 6, SwiftUI e XcodeGen. Veja também o [histórico técnico](CHANGELOG.md).
+Technologies: Swift 6, SwiftUI, and XcodeGen. See also the [technical changelog](CHANGELOG.md).
 
-## Relatar problemas e contribuir
+## Reporting issues and contributing
 
-Abra uma [issue](https://github.com/rcava/BaixaTudo/issues) com a versão do aplicativo e do macOS, o site envolvido, os passos para reproduzir e a mensagem de erro. Use links públicos quando possível e remova informações pessoais de capturas e logs.
+Open an [issue](https://github.com/rcava/BaixaTudo/issues) with your app and macOS versions, the affected website, reproduction steps, and the error message. Use public links where possible and remove personal information from screenshots and logs.
 
-Propostas de melhoria podem ser discutidas em issues e pull requests. As condições de reutilização do código dependem da definição de uma licença, conforme a seção seguinte.
+Improvements can be discussed in issues and pull requests. Code reuse terms depend on a license being defined, as explained below.
 
-## Créditos e licença
+## Credits and license
 
-- Projeto original: [DLYT, de Mentor Neto / Spinoff](https://github.com/Neto/DLYT).
-- Evolução do BaixaTudo: Ricardo Cavallini, com autoria preservada no histórico Git.
-- Ferramentas: [yt-dlp](https://github.com/yt-dlp/yt-dlp), [FFmpeg](https://ffmpeg.org/) e [Deno](https://deno.com/), sujeitas às respectivas licenças.
-- Correção experimental de Stories adaptada do [PR #17885 do yt-dlp](https://github.com/yt-dlp/yt-dlp/pull/17885), com detalhes em [STORIES-FIX.md](BaixaTudo/Resources/Diagnostics/STORIES-FIX.md).
+- Original project: [DLYT, by Mentor Neto / Spinoff](https://github.com/Neto/DLYT).
+- Further development of BaixaTudo: Ricardo Cavallini, with authorship preserved in Git history.
+- Tools: [yt-dlp](https://github.com/yt-dlp/yt-dlp), [FFmpeg](https://ffmpeg.org/), and [Deno](https://deno.com/), subject to their respective licenses.
+- Experimental Stories fix adapted from [yt-dlp PR #17885](https://github.com/yt-dlp/yt-dlp/pull/17885), with details in [STORIES-FIX.md](BaixaTudo/Resources/Diagnostics/STORIES-FIX.md).
 
-Este repositório e o projeto original consultado não possuem arquivo de licença. A publicação do código não concede, por si só, uma licença de reutilização, modificação ou redistribuição. Nenhuma nova licença foi atribuída ao código herdado.
+Neither this repository nor the original project, as reviewed, includes a license file. Publishing the source code does not by itself grant a license to reuse, modify, or redistribute it. No new license has been assigned to the inherited code.
 
-© 2026 Spinoff e respectivos autores.
+© 2026 Spinoff and the respective authors.
