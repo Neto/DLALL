@@ -1,14 +1,14 @@
 #!/bin/zsh
-# Gera BaixaTudo.pkg assinado e notarizado (abre com duplo clique em qualquer Mac Apple Silicon).
+# Gera DLALL.pkg assinado e notarizado (abre com duplo clique em qualquer Mac Apple Silicon).
 # Pré-requisitos (uma vez):
 #   1) Certificado "Developer ID Installer: Mentor Neto (FDWHNL3X82)" no Keychain
-#   2) xcrun notarytool store-credentials "BaixaTudo" --apple-id <email> --team-id FDWHNL3X82 --password <senha de app>
+#   2) xcrun notarytool store-credentials "DLYT" --apple-id <email> --team-id FDWHNL3X82 --password <senha de app>
 set -euo pipefail
 
 TEAM="FDWHNL3X82"
 APP_ID="Developer ID Application: Mentor Neto (${TEAM})"
 PKG_ID="Developer ID Installer: Mentor Neto (${TEAM})"
-NOTARY_PROFILE="BaixaTudo"
+NOTARY_PROFILE="DLYT"
 
 if [[ -d /Applications/Xcode-beta.app/Contents/Developer ]]; then
   export DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer
@@ -16,7 +16,7 @@ elif [[ -d /Applications/Xcode.app/Contents/Developer ]]; then
   export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 fi
 
-PROJ="${HOME}/ARDUINO/XCODE/BaixaTudo"
+PROJ="${HOME}/ARDUINO/XCODE/DLALL"
 cd "$PROJ"
 
 # --- Pré-checagens (falha cedo, antes de compilar) ---
@@ -37,7 +37,7 @@ if command -v xcodegen >/dev/null 2>&1; then
   xcodegen generate
 fi
 
-xcodebuild -project BaixaTudo.xcodeproj -scheme BaixaTudo -configuration Release \
+xcodebuild -project DLALL.xcodeproj -scheme DLALL -configuration Release \
   -destination 'platform=macOS,arch=arm64' \
   CODE_SIGN_IDENTITY="$APP_ID" \
   CODE_SIGN_STYLE=Manual \
@@ -45,11 +45,11 @@ xcodebuild -project BaixaTudo.xcodeproj -scheme BaixaTudo -configuration Release
   build
 
 APP="$(/usr/bin/find "${HOME}/Library/Developer/Xcode/DerivedData" \
-  -path '*/Build/Products/Release/BaixaTudo.app' -type d -print0 2>/dev/null \
+  -path '*/Build/Products/Release/DLALL.app' -type d -print0 2>/dev/null \
   | xargs -0 ls -dt 2>/dev/null | /usr/bin/head -1)"
 
 if [[ ! -d "$APP" ]]; then
-  print -u2 "Release BaixaTudo.app não encontrado."
+  print -u2 "Release DLALL.app não encontrado."
   exit 1
 fi
 
@@ -99,7 +99,7 @@ codesign --force --options runtime --timestamp \
   --sign "$APP_ID" "$APP/Contents/Helpers/deno"
 # app por último
 codesign --force --options runtime --timestamp \
-  --entitlements "$PROJ/BaixaTudo/BaixaTudo.entitlements" \
+  --entitlements "$PROJ/DLALL/DLALL.entitlements" \
   --sign "$APP_ID" "$APP"
 
 codesign --verify --deep --strict --verbose=2 "$APP"
@@ -112,42 +112,42 @@ codesign --verify --deep --strict --verbose=2 "$APP"
 
 "$PROJ/scripts/install-to-applications.sh" "$APP"
 
-STAGE="/tmp/baixatudo-pkgroot"
+STAGE="/tmp/dlall-pkgroot"
 rm -rf "$STAGE"
 mkdir -p "$STAGE"
-ditto "$APP" "$STAGE/BaixaTudo.app"
+ditto "$APP" "$STAGE/DLALL.app"
 
-PKG_DIR="/tmp/baixatudo-pkg"
+PKG_DIR="/tmp/dlall-pkg"
 rm -rf "$PKG_DIR"
 mkdir -p "$PKG_DIR"
 
 MARKETING="$(defaults read "$APP/Contents/Info" CFBundleShortVersionString)"
 BUILD="$(defaults read "$APP/Contents/Info" CFBundleVersion)"
 
-pkgbuild --identifier com.spinoff.BaixaTudo \
+pkgbuild --identifier com.spinoff.DLALL \
   --version "$MARKETING" \
   --install-location /Applications \
-  --component "$STAGE/BaixaTudo.app" \
-  "$PKG_DIR/BaixaTudo-component.pkg"
+  --component "$STAGE/DLALL.app" \
+  "$PKG_DIR/DLALL-component.pkg"
 
 cat > "$PKG_DIR/distribution.xml" << EOF
 <?xml version="1.0" encoding="utf-8"?>
 <installer-gui-script minSpecVersion="2">
-    <title>BaixaTudo</title>
+    <title>DLALL</title>
     <organization>com.spinoff</organization>
     <options customize="never" require-scripts="false" hostArchitectures="arm64"/>
     <welcome file="welcome.html" mime-type="text/html"/>
-    <pkg-ref id="com.spinoff.BaixaTudo"/>
+    <pkg-ref id="com.spinoff.DLALL"/>
     <choices-outline>
         <line choice="default">
-            <line choice="com.spinoff.BaixaTudo"/>
+            <line choice="com.spinoff.DLALL"/>
         </line>
     </choices-outline>
     <choice id="default"/>
-    <choice id="com.spinoff.BaixaTudo" visible="false">
-        <pkg-ref id="com.spinoff.BaixaTudo"/>
+    <choice id="com.spinoff.DLALL" visible="false">
+        <pkg-ref id="com.spinoff.DLALL"/>
     </choice>
-    <pkg-ref id="com.spinoff.BaixaTudo" version="$MARKETING" onConclusion="none">BaixaTudo-component.pkg</pkg-ref>
+    <pkg-ref id="com.spinoff.DLALL" version="$MARKETING" onConclusion="none">DLALL-component.pkg</pkg-ref>
 </installer-gui-script>
 EOF
 
@@ -155,8 +155,8 @@ cp "$PROJ/scripts/installer/welcome.html" "$PKG_DIR/welcome.html"
 
 ARCHIVE_DIR="${PROJ}/dist"
 mkdir -p "$ARCHIVE_DIR"
-ARCHIVED_PKG="${ARCHIVE_DIR}/BaixaTudo-${MARKETING}-${BUILD}.pkg"
-OUT_PKG="${HOME}/Desktop/BaixaTudo.pkg"
+ARCHIVED_PKG="${ARCHIVE_DIR}/DLALL-${MARKETING}-${BUILD}.pkg"
+OUT_PKG="${HOME}/Desktop/DLALL.pkg"
 
 productbuild --distribution "$PKG_DIR/distribution.xml" \
   --package-path "$PKG_DIR" \

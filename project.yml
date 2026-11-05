@@ -1,42 +1,42 @@
-name: BaixaTudo
+name: DLALL
 options:
-  bundleIdPrefix: com.baixatudo
+  bundleIdPrefix: com.spinoff
   deploymentTarget:
     macOS: "15.0"
   createIntermediateGroups: true
-  developmentLanguage: pt-BR
+  developmentLanguage: en
 settings:
-  MARKETING_VERSION: "1.5.3"
-  CURRENT_PROJECT_VERSION: "14"
-  DEVELOPMENT_TEAM: NDCT2T4D7G
+  MARKETING_VERSION: "1.7.0"
+  CURRENT_PROJECT_VERSION: "15"
+  DEVELOPMENT_TEAM: FDWHNL3X82
   CODE_SIGN_STYLE: Automatic
   SWIFT_VERSION: "6.0"
   MACOSX_DEPLOYMENT_TARGET: "15.0"
 targets:
-  BaixaTudo:
+  DLALL:
     type: application
     platform: macOS
     sources:
-      - path: BaixaTudo
+      - path: DLALL
         excludes:
           - "**/.DS_Store"
           - "Resources/Diagnostics/**"
-      - path: BaixaTudo/Resources/Diagnostics
+      - path: DLALL/Resources/Diagnostics
         type: folder
         buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.baixatudo.BaixaTudo
-        PRODUCT_NAME: BaixaTudo
+        PRODUCT_BUNDLE_IDENTIFIER: com.spinoff.DLALL
+        PRODUCT_NAME: DLALL
         GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: BaixaTudo
-        INFOPLIST_KEY_CFBundleName: BaixaTudo
+        INFOPLIST_KEY_CFBundleDisplayName: DLALL
+        INFOPLIST_KEY_CFBundleName: DLALL
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
         INFOPLIST_KEY_NSHumanReadableCopyright: "© 2026 Spinoff"
         INFOPLIST_KEY_NSHighResolutionCapable: YES
         INFOPLIST_KEY_LSMinimumSystemVersion: "15.0"
-        INFOPLIST_KEY_NSAppleEventsUsageDescription: "O BaixaTudo usa o Safari só quando você ativa cookies do navegador, para baixar vídeos da sua conta."
-        CODE_SIGN_ENTITLEMENTS: BaixaTudo/BaixaTudo.entitlements
+        INFOPLIST_KEY_NSAppleEventsUsageDescription: "DLALL uses Safari only when you turn on browser cookies, to download videos from your account."
+        CODE_SIGN_ENTITLEMENTS: DLALL/DLALL.entitlements
         ENABLE_HARDENED_RUNTIME: YES
         ENABLE_PREVIEWS: YES
         COMBINE_HIDPI_IMAGES: YES

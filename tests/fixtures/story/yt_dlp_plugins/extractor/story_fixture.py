@@ -7,9 +7,9 @@ from yt_dlp.utils import ExtractorError
 from yt_dlp_plugins.extractor.instagram_story_fix import InstagramStoryFixIE
 
 
-class BaixaTudoStoryFixtureIE(InfoExtractor):
-    _VALID_URL = r'baixatudo-fixture:(?P<id>api|graphql|relay|photo|profile-bound|missing|highlight|legacy-user|missing-token|rate-limit)$'
-    IE_NAME = 'baixatudo:story-fixture'
+class DLALLStoryFixtureIE(InfoExtractor):
+    _VALID_URL = r'dlall-fixture:(?P<id>api|graphql|relay|photo|profile-bound|missing|highlight|legacy-user|missing-token|rate-limit)$'
+    IE_NAME = 'dlall:story-fixture'
 
     def _real_extract(self, url):
         case = self._match_id(url)

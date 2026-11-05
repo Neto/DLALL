@@ -15,7 +15,7 @@ else
 fi
 
 if [ -z "$APP" ] || [ ! -d "$APP" ]; then
-  echo "BaixaTudo.app não encontrado para empacotar helpers." >&2
+  echo "DLALL.app não encontrado para empacotar helpers." >&2
   exit 1
 fi
 

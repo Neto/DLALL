@@ -7,7 +7,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 BINARY = ROOT / 'Vendor/Helpers/yt-dlp.bundle/yt-dlp'
-PLUGINS = ROOT / 'BaixaTudo/Resources/Diagnostics'
+PLUGINS = ROOT / 'DLALL/Resources/Diagnostics'
 
 
 def check(rows, expected):
@@ -17,9 +17,9 @@ def check(rows, expected):
         result = subprocess.run([
             str(BINARY), '--ignore-config', '--no-update', '--no-colors',
             '--no-plugin-dirs', '--plugin-dirs', str(PLUGINS),
-            '--use-extractors', 'baixatudo:session', '--simulate',
+            '--use-extractors', 'dlall:session', '--simulate',
             '--proxy', 'http://127.0.0.1:1', '--socket-timeout', '1',
-            '--cookies', str(cookies), 'baixatudo:instagram-session',
+            '--cookies', str(cookies), 'dlall:instagram-session',
         ], capture_output=True, text=True, timeout=15)
         output = result.stdout + result.stderr
         assert result.returncode == 0, output

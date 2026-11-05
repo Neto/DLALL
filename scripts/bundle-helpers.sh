@@ -38,9 +38,9 @@ if [ ! -x /opt/homebrew/bin/python3.11 ]; then
   echo "python3.11 do Homebrew não encontrado. Rode: brew install python@3.11" >&2
   exit 1
 fi
-YT_BUILD_VENV="/tmp/baixatudo-ytdlp-build-venv"
-YT_BUILD_WORK="/tmp/baixatudo-ytdlp-build-work"
-YT_BUILD_OUT="/tmp/baixatudo-ytdlp-build-out"
+YT_BUILD_VENV="/tmp/dlall-ytdlp-build-venv"
+YT_BUILD_WORK="/tmp/dlall-ytdlp-build-work"
+YT_BUILD_OUT="/tmp/dlall-ytdlp-build-out"
 rm -rf "$YT_BUILD_VENV" "$YT_BUILD_WORK" "$YT_BUILD_OUT"
 /opt/homebrew/bin/python3.11 -m venv "$YT_BUILD_VENV"
 "$YT_BUILD_VENV/bin/pip" install --quiet --upgrade pip
@@ -60,7 +60,7 @@ cat > "$HELPERS/yt-dlp.bundle/Info.plist" <<'PLIST'
 <plist version="1.0">
 <dict>
   <key>CFBundleExecutable</key><string>yt-dlp</string>
-  <key>CFBundleIdentifier</key><string>com.baixatudo.ytdlp</string>
+  <key>CFBundleIdentifier</key><string>com.spinoff.ytdlp</string>
   <key>CFBundlePackageType</key><string>BNDL</string>
 </dict>
 </plist>
