@@ -206,8 +206,10 @@ enum YTDLPClient: Sendable {
         // Com override (ex: username do Instagram), usa o valor literal em vez do `%(title)` do
         // yt-dlp — precisa escapar `%` (o template trata `%` como caractere especial).
         let titleField = titleOverride.map { escapeOutputTemplateLiteral(String($0.prefix(180))) } ?? "%(title).180B"
+        // A tag de qualidade no nome evita que baixar o mesmo vídeo em outra qualidade colida
+        // com o arquivo já existente (o yt-dlp pularia o download vendo o nome igual).
         let template = outputFolder
-            .appendingPathComponent("\(titleField) [%(id)s].%(ext)s")
+            .appendingPathComponent("\(titleField) [%(id)s] [\(quality.fileTag)].%(ext)s")
             .path
 
         var arguments = baseArguments(cookies: cookies)

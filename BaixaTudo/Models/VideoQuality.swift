@@ -67,6 +67,22 @@ enum VideoQuality: String, Codable, CaseIterable, Identifiable, Sendable {
         }
     }
 
+    /// Tag curta pro nome do arquivo — sem isso, baixar o mesmo vídeo em duas qualidades
+    /// diferentes gera o mesmo nome; o yt-dlp vê que já existe e pula o download de novo.
+    var fileTag: String {
+        switch self {
+        case .best: "melhor"
+        case .p2160: "2160p"
+        case .p2160p30: "2160p30"
+        case .p1440: "1440p"
+        case .p1440p30: "1440p30"
+        case .p1080: "1080p"
+        case .p720: "720p"
+        case .p480: "480p"
+        case .audioOnly: "audio"
+        }
+    }
+
     var extractsAudio: Bool { self == .audioOnly }
 
     var prefersQuickTime: Bool { !extractsAudio }
