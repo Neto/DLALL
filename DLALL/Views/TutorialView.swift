@@ -29,8 +29,6 @@ private extension View {
 /// and shows an example for each step.
 struct TutorialView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var pulse = false
-
     @State private var step = 0
     @State private var frames: [String: CGRect] = [:]
 
@@ -70,34 +68,8 @@ struct TutorialView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            HStack {
-                Text("Welcome to DLALL")
-                    .font(.title2.bold())
-                Spacer()
-                Button { dismiss() } label: {
-                    HStack(spacing: 6) {
-                        Text("Close")
-                            .font(.system(size: 13, weight: .semibold))
-                        Image(systemName: "xmark")
-                            .font(.system(size: 11, weight: .bold))
-                    }
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 14)
-                    .frame(height: 30)
-                    .background(Capsule().fill(.white.opacity(0.16)))
-                    .overlay(Capsule().strokeBorder(.white.opacity(0.6), lineWidth: 1))
-                    .overlay {
-                        Capsule()
-                            .strokeBorder(Color.white.opacity(pulse ? 0 : 0.7), lineWidth: 2)
-                            .scaleEffect(pulse ? 1.35 : 1)
-                    }
-                    .contentShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .keyboardShortcut(.cancelAction)
-                .help("Close the tutorial (Esc)")
-                .accessibilityHint("Closes the tutorial")
-            }
+            Text("Welcome to DLALL")
+                .font(.title2.bold())
 
             VStack(spacing: 6) {
                 Text("Step \(step + 1) of \(steps.count)")
@@ -151,9 +123,6 @@ struct TutorialView: View {
             )
         }
         .preferredColorScheme(.dark)
-        .onAppear {
-            withAnimation(.easeOut(duration: 1.4).repeatForever(autoreverses: false)) { pulse = true }
-        }
         .task(id: step) {
             try? await run(step)
         }
@@ -162,7 +131,7 @@ struct TutorialView: View {
     // MARK: Stage (light grey surround and logo)
 
     private var stage: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(LinearGradient(
                     colors: [Color(white: 0.90), Color(white: 0.80)],
@@ -175,28 +144,8 @@ struct TutorialView: View {
                 Spacer(minLength: 0)
             }
             .frame(maxWidth: .infinity)
-            logoBadge
-                .padding(12)
         }
-        .frame(height: 418)
-    }
-
-    private var logoBadge: some View {
-        Group {
-            if let url = Bundle.main.url(forResource: "DLALLLogo", withExtension: "png"),
-               let image = NSImage(contentsOf: url) {
-                Image(nsImage: image)
-                    .resizable()
-                    .interpolation(.high)
-                    .scaledToFit()
-            }
-        }
-        .frame(width: 24, height: 24)
-        .padding(7)
-        .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(DLALLTheme.indigo))
-        .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(.white.opacity(0.35), lineWidth: 1))
-        .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
-        .accessibilityHidden(true)
+        .frame(height: 376)
     }
 
     // MARK: Mock window
@@ -208,6 +157,9 @@ struct TutorialView: View {
                 mockContent
                 Spacer(minLength: 0)
             }
+            LogoMark(size: 16)
+                .padding(10)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             if menuOpen { qualityMenu }
             if settingsOpen { settingsCard }
             if cursorVisible { cursorView }

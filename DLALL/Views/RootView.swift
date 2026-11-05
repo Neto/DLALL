@@ -48,6 +48,15 @@ struct RootView: View {
                     HistoryView()
                 }
             }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                HStack {
+                    Spacer()
+                    LogoMark(size: 20)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .allowsHitTesting(false)
+            }
             .ignoresSafeArea(.container, edges: .top)
             .navigationTitle("DLALL")
             .toolbar(removing: .title)
