@@ -18,6 +18,7 @@
 		6A9D7D2CFB3B3B05A8277CA7 /* Funk.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1CE1F79C9803310AA9A44F8C /* Funk.aiff */; };
 		76E35393DBD62279D4D8E3CB /* AppVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2781AA7EA3047C7E3E208D22 /* AppVersion.swift */; };
 		79265309E5F0EB5BE4F584FA /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750F1F38CB427847B54822B8 /* HistoryStore.swift */; };
+		934C3121EA594D622A493C4E /* DLALLLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AEE735FEB6774AB3FD169272 /* DLALLLogo.png */; };
 		9EF769C8BD951C76B9DD9081 /* RequestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A396D52F7DCE8439DEF083F1 /* RequestCard.swift */; };
 		9FC99E060AA79F48E3439C22 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72092E11A7C4325BB5C59C7F /* RootView.swift */; };
 		A287727E30A61EE779FD0893 /* YTDLPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AFFB297EDD1A0B3A058B3F /* YTDLPClient.swift */; };
@@ -55,6 +56,7 @@
 		82125B4CAD166882B4E7A564 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		98AFFB297EDD1A0B3A058B3F /* YTDLPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTDLPClient.swift; sourceTree = "<group>"; };
 		A396D52F7DCE8439DEF083F1 /* RequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestCard.swift; sourceTree = "<group>"; };
+		AEE735FEB6774AB3FD169272 /* DLALLLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DLALLLogo.png; sourceTree = "<group>"; };
 		BAB5D247A2E68447115ED2D6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		C62C726F71FE16D5B09199E6 /* DownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadJob.swift; sourceTree = "<group>"; };
 		CC9A4210A88FD9CC245BC6E2 /* Upscaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upscaler.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				DBF128D0BAE7050D04E86F52 /* Diagnostics */,
+				AEE735FEB6774AB3FD169272 /* DLALLLogo.png */,
 				1CE1F79C9803310AA9A44F8C /* Funk.aiff */,
 			);
 			path = Resources;
@@ -227,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D4D4850899274CC5C748A3C /* Assets.xcassets in Resources */,
+				934C3121EA594D622A493C4E /* DLALLLogo.png in Resources */,
 				6A917B5EBEEC4B132E0E7ADF /* Diagnostics in Resources */,
 				6A9D7D2CFB3B3B05A8277CA7 /* Funk.aiff in Resources */,
 			);
@@ -352,7 +356,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = FDWHNL3X82;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -372,7 +376,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -419,7 +423,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FDWHNL3X82;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -433,7 +437,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -1,5 +1,7 @@
 # Technical history
 
+Release 1.8.1 (build 18) updates the tutorial. The animation now plays on a light grey stage, so the dark window of the app is easy to see. The DLALL logo sits in the bottom right corner of the stage. A new step, Upscale low resolution videos, shows the Available and Upscale sections of the Quality menu.
+
 Release 1.8.0 (build 17) adds upscale. The Quality menu has two sections: Available and Upscale. Upscale lists the resolutions above the best resolution of the video. On macOS 26 or later, with a source up to 1080p, the app uses Apple machine learning super resolution (VideoToolbox VTFrameProcessor). Otherwise it uses ffmpeg Lanczos scaling. If the ML step fails, Lanczos runs instead. Each request in Downloads and History is now a long card, and its actions sit in a right column that thin lines divide.
 
 Release 1.7.1 (build 16) changes the look of the controls to clear Liquid Glass. The Downloads and History switch is now one segmented control in the blue bar. The URL row order is Paste, URL field, Quality, Download. The text under the field is removed. The tutorial has a darker background, a Close button and larger Back and Next buttons. Scripts use the notarization profile DLALL.

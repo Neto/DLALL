@@ -42,6 +42,7 @@ struct TutorialView: View {
     @State private var url = ""
     @State private var quality = "Best quality"
     @State private var menuOpen = false
+    @State private var menuLow = false
     @State private var progress: Double?
     @State private var phase = "Download"
     @State private var finished = false
@@ -55,6 +56,8 @@ struct TutorialView: View {
          "Click Paste, or type a link in the field. DLALL works with YouTube, Instagram, TikTok, and Vimeo."),
         ("Choose the quality",
          "Pick a resolution. Choose Audio only to save an MP3. The options depend on the video."),
+        ("Upscale low resolution videos",
+         "For a low resolution video, the Quality menu adds an Upscale section. Choose Upscale to 1080p for a bigger picture. DLALL uses Apple ML on macOS 26 and later."),
         ("Click Download",
          "DLALL downloads the video and converts it for QuickTime. The progress shows in the list."),
         ("Find it again in History",
@@ -108,7 +111,7 @@ struct TutorialView: View {
                     .frame(maxWidth: 560, minHeight: 44, alignment: .top)
             }
 
-            mock
+            stage
 
             HStack {
                 HStack(spacing: 6) {
@@ -135,7 +138,7 @@ struct TutorialView: View {
             }
         }
         .padding(24)
-        .frame(width: 740)
+        .frame(width: 780)
         .background {
             LinearGradient(
                 stops: [
@@ -156,6 +159,46 @@ struct TutorialView: View {
         }
     }
 
+    // MARK: Stage (light grey surround and logo)
+
+    private var stage: some View {
+        ZStack(alignment: .bottomTrailing) {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(LinearGradient(
+                    colors: [Color(white: 0.90), Color(white: 0.80)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+            VStack(spacing: 0) {
+                mock
+                    .padding(.top, 18)
+                Spacer(minLength: 0)
+            }
+            .frame(maxWidth: .infinity)
+            logoBadge
+                .padding(12)
+        }
+        .frame(height: 418)
+    }
+
+    private var logoBadge: some View {
+        Group {
+            if let url = Bundle.main.url(forResource: "DLALLLogo", withExtension: "png"),
+               let image = NSImage(contentsOf: url) {
+                Image(nsImage: image)
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFit()
+            }
+        }
+        .frame(width: 24, height: 24)
+        .padding(7)
+        .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(DLALLTheme.indigo))
+        .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(.white.opacity(0.35), lineWidth: 1))
+        .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+        .accessibilityHidden(true)
+    }
+
     // MARK: Mock window
 
     private var mock: some View {
@@ -174,7 +217,7 @@ struct TutorialView: View {
         .background(DLALLTheme.base)
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.white.opacity(0.28), lineWidth: 1))
-        .shadow(color: DLALLTheme.indigo.opacity(0.55), radius: 28, y: 8)
+        .shadow(color: .black.opacity(0.35), radius: 18, y: 6)
         .onPreferenceChange(TutorialFrames.self) { frames = $0 }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Animated example of the DLALL window")
@@ -342,28 +385,56 @@ struct TutorialView: View {
     }
 
     private var qualityMenu: some View {
-        let options = ["Best quality", "2160p (4K)", "1080p", "720p", "Audio only (MP3)"]
+        let available = menuLow
+            ? ["Best quality", "360p", "240p", "Audio only (MP3)"]
+            : ["Best quality", "1080p", "720p", "Audio only (MP3)"]
+        let upscale = ["Upscale to 720p", "Upscale to 1080p"]
         let origin = frames["quality"].map { CGPoint(x: $0.minX, y: $0.maxY + 4) } ?? CGPoint(x: 430, y: 90)
         return VStack(alignment: .leading, spacing: 0) {
-            ForEach(options, id: \.self) { option in
-                HStack {
-                    Text(option)
-                    Spacer(minLength: 10)
-                    if option == quality { Image(systemName: "checkmark") }
+            menuHeader("Available")
+            ForEach(available, id: \.self) { option in
+                menuRow(option, anchor: !menuLow && option == "1080p" ? "opt1080" : nil)
+            }
+            if menuLow {
+                Divider().padding(.vertical, 3)
+                menuHeader("Upscale (Apple ML)")
+                ForEach(upscale, id: \.self) { option in
+                    menuRow(option, anchor: option == "Upscale to 1080p" ? "optUp1080" : nil)
                 }
-                .font(.callout)
-                .padding(.horizontal, 10)
-                .frame(height: 26)
-                .background(option == "1080p" && target == "opt1080" ? Color.accentColor.opacity(0.5) : .clear)
-                .modifier(OptionAnchor(isTarget: option == "1080p"))
             }
         }
-        .frame(width: 170)
+        .frame(width: 190)
         .padding(4)
         .background(RoundedRectangle(cornerRadius: 8).fill(Color(white: 0.16)))
         .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(.white.opacity(0.15)))
         .shadow(radius: 8)
         .offset(x: origin.x, y: origin.y)
+    }
+
+    private func menuHeader(_ title: String) -> some View {
+        Text(title)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.white.opacity(0.5))
+            .padding(.horizontal, 10)
+            .frame(height: 20, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private func menuRow(_ option: String, anchor: String?) -> some View {
+        let row = HStack {
+            Text(option)
+            Spacer(minLength: 10)
+            if option == quality { Image(systemName: "checkmark") }
+        }
+        .font(.callout)
+        .padding(.horizontal, 10)
+        .frame(height: 26)
+        .background(anchor != nil && target == anchor ? Color.accentColor.opacity(0.5) : .clear)
+        if let anchor {
+            row.tutorialAnchor(anchor)
+        } else {
+            row
+        }
     }
 
     private var settingsCard: some View {
@@ -445,8 +516,10 @@ struct TutorialView: View {
         job: Bool = false,
         history: Bool = false,
         settings: Bool = false,
-        menu: Bool = false
+        menu: Bool = false,
+        low: Bool = false
     ) {
+        menuLow = low
         self.url = url
         self.quality = quality
         progress = job ? 1 : nil
@@ -492,6 +565,20 @@ struct TutorialView: View {
             advance()
 
         case 2:
+            setBaseline(url: exampleURL, low: true)
+            cursorVisible = true
+            try await move(to: "quality")
+            try await click()
+            withAnimation(.easeOut(duration: 0.15)) { menuOpen = true }
+            try await pause(900)
+            try await move(to: "optUp1080")
+            try await click()
+            quality = "Upscale to 1080p"
+            withAnimation { menuOpen = false }
+            try await pause(1500)
+            advance()
+
+        case 3:
             setBaseline(url: exampleURL, quality: "1080p")
             cursorVisible = true
             try await move(to: "download")
@@ -513,7 +600,7 @@ struct TutorialView: View {
             try await pause(1500)
             advance()
 
-        case 3:
+        case 4:
             setBaseline(job: true)
             cursorVisible = true
             try await move(to: "tabHistory")
@@ -525,7 +612,7 @@ struct TutorialView: View {
             try await pause(1200)
             advance()
 
-        case 4:
+        case 5:
             setBaseline()
             cursorVisible = true
             try await move(to: "gear")
@@ -569,19 +656,6 @@ private extension View {
                     lineWidth: 1
                 )
             )
-    }
-}
-
-/// Anchors the 1080p row of the mock quality menu so the cursor can move to it.
-private struct OptionAnchor: ViewModifier {
-    let isTarget: Bool
-
-    func body(content: Content) -> some View {
-        if isTarget {
-            content.tutorialAnchor("opt1080")
-        } else {
-            content
-        }
     }
 }
 
