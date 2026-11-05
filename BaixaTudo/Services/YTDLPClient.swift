@@ -609,8 +609,13 @@ enum YTDLPClient: Sendable {
         }
         if let deno = BinaryLocator.findDeno() {
             args += ["--js-runtimes", "deno:\(deno.path)"]
+            // Alguns vídeos do YouTube só resolvem o desafio de assinatura com o solver "ejs"
+            // baixado do GitHub sob demanda; sem isso o yt-dlp pula a resolução e só sobram
+            // miniaturas (nenhuma resolução de vídeo). Sem essa flag, cai de vez em quando.
+            args += ["--remote-components", "ejs:github"]
         } else if let node = BinaryLocator.findNode() {
             args += ["--js-runtimes", "node:\(node.path)"]
+            args += ["--remote-components", "ejs:github"]
         }
         if let browser = cookies.ytDlpName {
             args += ["--cookies-from-browser", browser]

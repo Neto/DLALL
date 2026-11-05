@@ -33,7 +33,7 @@ if [ -n "${SRCROOT:-}" ] && [ -d "${SRCROOT}/Vendor/Helpers" ]; then
 elif [ -d "$(dirname "$0")/../Vendor/Helpers" ]; then
   HELPERS_SRC="$(cd "$(dirname "$0")/../Vendor/Helpers" && pwd)"
 fi
-if [ -n "$HELPERS_SRC" ] && [ -x "$HELPERS_SRC/yt-dlp" ] && [ ! -x "$APP/Contents/Helpers/yt-dlp" ]; then
+if [ -n "$HELPERS_SRC" ] && [ -x "$HELPERS_SRC/yt-dlp.bundle/yt-dlp" ] && [ ! -x "$APP/Contents/Helpers/yt-dlp.bundle/yt-dlp" ]; then
   /bin/mkdir -p "$APP/Contents/Helpers"
   /usr/bin/rsync -a "$HELPERS_SRC/" "$APP/Contents/Helpers/"
   if [ -n "${EXPANDED_CODE_SIGN_IDENTITY:-}" ] && [ "${EXPANDED_CODE_SIGN_IDENTITY}" != "-" ]; then

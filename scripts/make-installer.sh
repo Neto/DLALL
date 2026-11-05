@@ -57,7 +57,7 @@ rm -rf "$APP/Contents/Helpers"
 mkdir -p "$APP/Contents/Helpers"
 /usr/bin/rsync -a "$PROJ/Vendor/Helpers/" "$APP/Contents/Helpers/"
 
-if [[ ! -x "$APP/Contents/Helpers/yt-dlp" ]]; then
+if [[ ! -x "$APP/Contents/Helpers/yt-dlp.bundle/yt-dlp" ]]; then
   print -u2 "Helpers não foram copiados para o app."
   exit 1
 fi
@@ -69,12 +69,34 @@ find "$APP/Contents/Helpers" -name '*.dylib' -print0 \
 for b in ffmpeg ffprobe; do
   codesign --force --options runtime --timestamp --sign "$APP_ID" "$APP/Contents/Helpers/$b"
 done
-# yt-dlp (PyInstaller) e deno (V8/JIT) precisam de entitlements próprios sob hardened runtime
-for b in yt-dlp deno; do
-  codesign --force --options runtime --timestamp \
-    --entitlements "$PROJ/scripts/helpers.entitlements" \
-    --sign "$APP_ID" "$APP/Contents/Helpers/$b"
+# yt-dlp (PyInstaller onedir — pasta yt-dlp.bundle/ com o executável + libs em _internal/) e
+# deno (V8/JIT) precisam de entitlements próprios sob hardened runtime. A extensão .bundle é
+# obrigatória: sem ela o CodeSign do app tenta validar o conteúdo de _internal/ por dentro e
+# falha; com ela, trata a pasta como um pacote já assinado. Assina _internal/ (exceto o
+# Python.framework, que é assinado como framework à parte) e por último a pasta toda.
+find "$APP/Contents/Helpers/yt-dlp.bundle/_internal" -type f -perm -111 -print0 | while IFS= read -r -d '' f; do
+  case "$f" in
+    */Python.framework/*) ;;
+    *)
+      case "$(file -b "$f")" in
+        Mach-O*)
+          codesign --force --options runtime --timestamp \
+            --entitlements "$PROJ/scripts/helpers.entitlements" \
+            --sign "$APP_ID" "$f"
+          ;;
+      esac
+      ;;
+  esac
 done
+codesign --force --options runtime --timestamp \
+  --entitlements "$PROJ/scripts/helpers.entitlements" \
+  --sign "$APP_ID" "$APP/Contents/Helpers/yt-dlp.bundle/_internal/Python.framework"
+codesign --force --options runtime --timestamp \
+  --entitlements "$PROJ/scripts/helpers.entitlements" \
+  --sign "$APP_ID" "$APP/Contents/Helpers/yt-dlp.bundle"
+codesign --force --options runtime --timestamp \
+  --entitlements "$PROJ/scripts/helpers.entitlements" \
+  --sign "$APP_ID" "$APP/Contents/Helpers/deno"
 # app por último
 codesign --force --options runtime --timestamp \
   --entitlements "$PROJ/BaixaTudo/BaixaTudo.entitlements" \
@@ -83,7 +105,7 @@ codesign --force --options runtime --timestamp \
 codesign --verify --deep --strict --verbose=2 "$APP"
 
 # --- Teste de fumaça: os helpers assinados precisam executar ---
-"$APP/Contents/Helpers/yt-dlp" --version
+"$APP/Contents/Helpers/yt-dlp.bundle/yt-dlp" --version
 "$APP/Contents/Helpers/ffmpeg" -version | head -1
 "$APP/Contents/Helpers/ffprobe" -version | head -1
 "$APP/Contents/Helpers/deno" --version | head -1

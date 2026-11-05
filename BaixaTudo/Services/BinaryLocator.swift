@@ -32,7 +32,12 @@ enum BinaryLocator: Sendable {
 
     static func findYTDLP(customPath: String) -> URL? {
         existingExecutable(customPath)
-            ?? bundled("yt-dlp")
+            // yt-dlp é empacotado como PyInstaller onedir (pasta yt-dlp.bundle/ com o executável
+            // yt-dlp dentro) em vez de onefile — onefile se autoextrai a cada execução (~7s de
+            // startup por chamada); onedir já vem descompactado, então roda na hora. A extensão
+            // .bundle é necessária pro codesign do app tratar a pasta como um pacote já assinado
+            // (senão ele tenta validar o conteúdo de _internal/ por dentro e falha).
+            ?? bundled("yt-dlp.bundle/yt-dlp")
             ?? existingExecutable("/opt/homebrew/bin/yt-dlp")
             ?? existingExecutable("/usr/local/bin/yt-dlp")
             ?? which("yt-dlp")
