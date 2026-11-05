@@ -40,6 +40,12 @@ if [ -n "$HELPERS_SRC" ] && [ -x "$HELPERS_SRC/yt-dlp" ]; then
     elif [ -f "$(dirname "$0")/helpers.entitlements" ]; then
       HELPERS_ENT="$(dirname "$0")/helpers.entitlements"
     fi
+    # Assina as .dylib do ffmpeg/ffprobe primeiro, com o mesmo Team ID — sem isso, hardened
+    # runtime recusa carregá-las (Team ID diferente do binário que as carrega).
+    if [ -d "$APP/Contents/Helpers/lib" ]; then
+      find "$APP/Contents/Helpers/lib" -name '*.dylib' -print0 \
+        | xargs -0 -I{} /usr/bin/codesign --force --options runtime --sign "${EXPANDED_CODE_SIGN_IDENTITY}" {} >/dev/null 2>&1 || true
+    fi
     # yt-dlp (PyInstaller) e deno (V8/JIT) travam sob hardened runtime sem permissão de JIT —
     # assina os dois com entitlements próprios, nunca com --deep a partir do app (que aplicaria
     # os entitlements do app, sem allow-jit, e quebraria o solver de desafio JS do YouTube).
