@@ -2,13 +2,13 @@
 # Gera DLALL.pkg assinado e notarizado (abre com duplo clique em qualquer Mac Apple Silicon).
 # Pré-requisitos (uma vez):
 #   1) Certificado "Developer ID Installer: Mentor Neto (FDWHNL3X82)" no Keychain
-#   2) xcrun notarytool store-credentials "DLYT" --apple-id <email> --team-id FDWHNL3X82 --password <senha de app>
+#   2) xcrun notarytool store-credentials "DLALL" --apple-id <email> --team-id FDWHNL3X82 --password <senha de app>
 set -euo pipefail
 
 TEAM="FDWHNL3X82"
 APP_ID="Developer ID Application: Mentor Neto (${TEAM})"
 PKG_ID="Developer ID Installer: Mentor Neto (${TEAM})"
-NOTARY_PROFILE="DLYT"
+NOTARY_PROFILE="DLALL"
 
 if [[ -d /Applications/Xcode-beta.app/Contents/Developer ]]; then
   export DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer

@@ -18,16 +18,6 @@ struct RootView: View {
 
                 engineBar
 
-                Picker("Section", selection: $model.selectedTab) {
-                    ForEach(AppTab.allCases) { tab in
-                        Text(tab.title).tag(tab)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .frame(maxWidth: 260)
-                .padding(.vertical, 8)
-
                 switch model.selectedTab {
                 case .downloads:
                     if model.jobs.isEmpty {

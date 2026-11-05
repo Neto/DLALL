@@ -1,5 +1,7 @@
 # Technical history
 
+Release 1.7.1 (build 16) changes the look of the controls to clear Liquid Glass. The Downloads and History switch is now one segmented control in the blue bar. The URL row order is Paste, URL field, Quality, Download. The text under the field is removed. The tutorial has a darker background, a Close button and larger Back and Next buttons. Scripts use the notarization profile DLALL.
+
 Release 1.7.0 (build 15) renames the app to DLALL and merges the BaixaTudo version of Ricardo Cavallini with the History tab of release 1.6. The whole interface is now in English. The first launch shows an animated tutorial. Help > Show Tutorial opens it again. The empty state shows only a title and a link to the tutorial.
 
 Build 12 includes a Stories-only plugin adapted from [yt-dlp PR #17885](https://github.com/yt-dlp/yt-dlp/pull/17885), pinned to `3e089b44ea159f6057d8792ae0abc0e9e33127b9`. This experimental patch prefers embedded page data, then the reels API and a GraphQL fallback. Local adaptations bound profile lookup, preserve the existing API shape and retain photo Stories. It requires a specific browser, disables internal retries for Stories and skips the automatic quality probe when pasting a Story URL. Clicking download starts metadata extraction; successful downloads can still perform a second extraction in the existing download phase. Other websites retain their existing extractor. No live Instagram test is run during builds or fixture tests.

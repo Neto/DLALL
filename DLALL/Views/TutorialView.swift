@@ -29,6 +29,7 @@ private extension View {
 /// and shows an example for each step.
 struct TutorialView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var pulse = false
 
     @State private var step = 0
     @State private var frames: [String: CGRect] = [:]
@@ -70,10 +71,29 @@ struct TutorialView: View {
                 Text("Welcome to DLALL")
                     .font(.title2.bold())
                 Spacer()
-                Button("Skip") { dismiss() }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.secondary)
-                    .accessibilityHint("Closes the tutorial")
+                Button { dismiss() } label: {
+                    HStack(spacing: 6) {
+                        Text("Close")
+                            .font(.system(size: 13, weight: .semibold))
+                        Image(systemName: "xmark")
+                            .font(.system(size: 11, weight: .bold))
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 14)
+                    .frame(height: 30)
+                    .background(Capsule().fill(.white.opacity(0.16)))
+                    .overlay(Capsule().strokeBorder(.white.opacity(0.6), lineWidth: 1))
+                    .overlay {
+                        Capsule()
+                            .strokeBorder(Color.white.opacity(pulse ? 0 : 0.7), lineWidth: 2)
+                            .scaleEffect(pulse ? 1.35 : 1)
+                    }
+                    .contentShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .keyboardShortcut(.cancelAction)
+                .help("Close the tutorial (Esc)")
+                .accessibilityHint("Closes the tutorial")
             }
 
             VStack(spacing: 6) {
@@ -101,20 +121,36 @@ struct TutorialView: View {
                 Spacer()
                 if step > 0 {
                     Button("Back") { step -= 1 }
+                        .buttonStyle(TutorialSecondaryButton())
                 }
                 if step == steps.count - 1 {
                     Button("Start Using DLALL") { dismiss() }
                         .keyboardShortcut(.defaultAction)
+                        .buttonStyle(TutorialPrimaryButton())
                 } else {
                     Button("Next") { step += 1 }
                         .keyboardShortcut(.defaultAction)
+                        .buttonStyle(TutorialPrimaryButton())
                 }
             }
         }
         .padding(24)
         .frame(width: 740)
-        .background(DLALLTheme.base)
+        .background {
+            LinearGradient(
+                stops: [
+                    .init(color: DLALLTheme.indigo, location: 0),
+                    .init(color: DLALLTheme.indigoDeep, location: 0.35),
+                    .init(color: Color(red: 0.03, green: 0.03, blue: 0.06), location: 1),
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        }
         .preferredColorScheme(.dark)
+        .onAppear {
+            withAnimation(.easeOut(duration: 1.4).repeatForever(autoreverses: false)) { pulse = true }
+        }
         .task(id: step) {
             try? await run(step)
         }
@@ -126,7 +162,6 @@ struct TutorialView: View {
         ZStack(alignment: .topLeading) {
             VStack(spacing: 0) {
                 mockHeader
-                mockTabs
                 mockContent
                 Spacer(minLength: 0)
             }
@@ -134,11 +169,12 @@ struct TutorialView: View {
             if settingsOpen { settingsCard }
             if cursorVisible { cursorView }
         }
-        .frame(width: 680, height: 330)
+        .frame(width: 680, height: 340)
         .coordinateSpace(name: "mock")
         .background(DLALLTheme.base)
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.white.opacity(0.12)))
+        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.white.opacity(0.28), lineWidth: 1))
+        .shadow(color: DLALLTheme.indigo.opacity(0.55), radius: 28, y: 8)
         .onPreferenceChange(TutorialFrames.self) { frames = $0 }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Animated example of the DLALL window")
@@ -150,18 +186,31 @@ struct TutorialView: View {
 
     private var mockHeader: some View {
         VStack(spacing: 10) {
-            HStack {
+            HStack(spacing: 6) {
+                ForEach(0..<3, id: \.self) { _ in
+                    Circle().fill(.white.opacity(0.4)).frame(width: 10, height: 10)
+                }
                 Text("DLALL")
                     .font(.system(size: 13, weight: .semibold))
+                    .padding(.leading, 14)
+                    .padding(.top, 8)
                 Spacer()
                 Image(systemName: "gearshape")
                     .frame(width: 28, height: 28)
-                    .background(Circle().fill(.white.opacity(0.14)))
+                    .mockGlass(Circle())
                     .scaleEffect(scale("gear"))
                     .tutorialAnchor("gear")
             }
 
             HStack(spacing: 8) {
+                Label("Paste", systemImage: "doc.on.clipboard")
+                    .font(.system(size: 13, weight: .medium))
+                    .padding(.horizontal, 12)
+                    .frame(height: 30)
+                    .mockGlass(Capsule())
+                    .scaleEffect(scale("paste"))
+                    .tutorialAnchor("paste")
+
                 HStack {
                     Text(url.isEmpty ? "Paste a video URL" : url)
                         .lineLimit(1)
@@ -171,7 +220,7 @@ struct TutorialView: View {
                 .font(.callout)
                 .padding(.horizontal, 14)
                 .frame(height: 30)
-                .background(Capsule().fill(.white.opacity(0.12)))
+                .mockGlass(Capsule())
                 .tutorialAnchor("field")
 
                 HStack(spacing: 5) {
@@ -182,7 +231,7 @@ struct TutorialView: View {
                 .foregroundStyle(url.isEmpty ? Color.white.opacity(0.4) : Color.white)
                 .padding(.horizontal, 12)
                 .frame(height: 30)
-                .background(Capsule().fill(.white.opacity(0.12)))
+                .mockGlass(Capsule())
                 .scaleEffect(scale("quality"))
                 .tutorialAnchor("quality")
 
@@ -191,27 +240,19 @@ struct TutorialView: View {
                     .foregroundStyle(url.isEmpty ? Color.white.opacity(0.4) : Color.white)
                     .padding(.horizontal, 14)
                     .frame(height: 30)
-                    .background(Capsule().fill(url.isEmpty ? DLALLTheme.pill : DLALLTheme.indigo))
+                    .mockGlass(Capsule(), tint: url.isEmpty ? nil : DLALLTheme.indigo)
                     .scaleEffect(scale("download"))
                     .tutorialAnchor("download")
             }
 
-            HStack {
-                if url.isEmpty {
-                    Text("YouTube, Instagram, TikTok, or Vimeo")
-                } else {
-                    Label("YouTube", systemImage: "play.rectangle.fill")
-                }
-                Spacer()
-                Label("Paste", systemImage: "doc.on.clipboard")
-                    .padding(.horizontal, 10)
-                    .frame(height: 24)
-                    .background(Capsule().fill(.white.opacity(0.12)))
-                    .scaleEffect(scale("paste"))
-                    .tutorialAnchor("paste")
+            HStack(spacing: 0) {
+                switchSegment("Downloads", selected: !historyTab)
+                switchSegment("History", selected: historyTab)
+                    .scaleEffect(scale("tabHistory"))
+                    .tutorialAnchor("tabHistory")
             }
-            .font(.caption)
-            .foregroundStyle(.white.opacity(0.7))
+            .padding(2)
+            .mockGlass(Capsule())
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
@@ -224,23 +265,6 @@ struct TutorialView: View {
                     endPoint: .bottom
                 ))
         )
-    }
-
-    private var mockTabs: some View {
-        HStack(spacing: 0) {
-            Text("Downloads")
-                .frame(width: 120, height: 24)
-                .background(Capsule().fill(historyTab ? Color.clear : Color.white.opacity(0.2)))
-            Text("History")
-                .frame(width: 120, height: 24)
-                .background(Capsule().fill(historyTab ? Color.white.opacity(0.2) : Color.clear))
-                .scaleEffect(scale("tabHistory"))
-                .tutorialAnchor("tabHistory")
-        }
-        .font(.caption)
-        .padding(2)
-        .background(Capsule().fill(.white.opacity(0.08)))
-        .padding(.vertical, 8)
     }
 
     @ViewBuilder
@@ -284,6 +308,20 @@ struct TutorialView: View {
         }
     }
 
+    private func switchSegment(_ title: String, selected: Bool) -> some View {
+        Text(title)
+            .font(.system(size: 12, weight: .semibold))
+            .foregroundStyle(.white.opacity(selected ? 1 : 0.65))
+            .frame(width: 100, height: 22)
+            .background {
+                if selected {
+                    Capsule()
+                        .fill(.white.opacity(0.24))
+                        .overlay(Capsule().strokeBorder(.white.opacity(0.55), lineWidth: 1))
+                }
+            }
+    }
+
     private func mockRow(subtitle: String, trailing: AnyView) -> some View {
         HStack(spacing: 12) {
             Image(systemName: "play.rectangle.fill")
@@ -300,6 +338,7 @@ struct TutorialView: View {
         .padding(12)
         .background(RoundedRectangle(cornerRadius: 10).fill(.white.opacity(0.06)))
         .padding(.horizontal, 16)
+        .padding(.top, 14)
     }
 
     private var qualityMenu: some View {
@@ -502,6 +541,37 @@ struct TutorialView: View {
     }
 }
 
+/// Mock of the clear glass look used by the real controls.
+private extension View {
+    func mockGlass<S: InsettableShape>(_ shape: S, tint: Color? = nil) -> some View {
+        self
+            .background(shape.fill(tint?.opacity(0.4) ?? Color.white.opacity(0.07)))
+            .overlay(
+                shape.fill(
+                    LinearGradient(
+                        colors: [.white.opacity(0.28), .clear],
+                        startPoint: .top,
+                        endPoint: UnitPoint(x: 0.5, y: 0.65)
+                    )
+                )
+            )
+            .overlay(
+                shape.strokeBorder(
+                    LinearGradient(
+                        stops: [
+                            .init(color: .white.opacity(0.8), location: 0),
+                            .init(color: .white.opacity(0.06), location: 0.4),
+                            .init(color: .white.opacity(0.35), location: 1),
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+            )
+    }
+}
+
 /// Anchors the 1080p row of the mock quality menu so the cursor can move to it.
 private struct OptionAnchor: ViewModifier {
     let isTarget: Bool
@@ -517,4 +587,36 @@ private struct OptionAnchor: ViewModifier {
 
 #Preview {
     TutorialView()
+}
+
+
+/// Main action of the tutorial: indigo glass capsule with a bright rim.
+private struct TutorialPrimaryButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 14, weight: .semibold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 22)
+            .frame(height: 36)
+            .background(Capsule().fill(DLALLTheme.indigo.opacity(0.85)))
+            .overlay(Capsule().fill(LinearGradient(colors: [.white.opacity(0.3), .clear], startPoint: .top, endPoint: .center)))
+            .overlay(Capsule().strokeBorder(.white.opacity(0.7), lineWidth: 1))
+            .shadow(color: DLALLTheme.indigo.opacity(0.6), radius: 10, y: 2)
+            .opacity(configuration.isPressed ? 0.8 : 1)
+            .contentShape(Capsule())
+    }
+}
+
+private struct TutorialSecondaryButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 14, weight: .medium))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 20)
+            .frame(height: 36)
+            .background(Capsule().fill(.white.opacity(0.1)))
+            .overlay(Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 1))
+            .opacity(configuration.isPressed ? 0.8 : 1)
+            .contentShape(Capsule())
+    }
 }

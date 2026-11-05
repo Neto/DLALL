@@ -11,6 +11,21 @@ struct ComposerView: View {
 
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .center, spacing: 10) {
+                Button {
+                    model.pasteFromClipboard()
+                    urlFocused = true
+                } label: {
+                    Label("Paste", systemImage: "doc.on.clipboard")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 14)
+                        .frame(height: pillHeight)
+                        .glassPill(Capsule())
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .help("Paste a URL from the clipboard.")
+
                 TextField(
                     "",
                     text: $model.draftURL,
@@ -65,25 +80,6 @@ struct ComposerView: View {
                 .help("Fetch the video and start the download.")
             }
 
-            HStack(spacing: 12) {
-                platformHint
-                Spacer()
-                Button {
-                    model.pasteFromClipboard()
-                    urlFocused = true
-                } label: {
-                    Label("Paste", systemImage: "doc.on.clipboard")
-                        .font(.callout)
-                        .padding(.horizontal, 12)
-                        .frame(height: 26)
-                        .glassPill(Capsule())
-                        .contentShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .help("Paste a URL from the clipboard.")
-            }
-            .font(.callout)
-            .foregroundStyle(.white.opacity(0.7))
         }
         .onAppear {
             urlFocused = true
@@ -99,17 +95,6 @@ struct ComposerView: View {
         if model.isImageOnly { return model.imageCount > 1 ? "\(model.imageCount) images" : "Image" }
         if model.availableQualities.isEmpty { return "Quality" }
         return model.quality.title
-    }
-
-    @ViewBuilder
-    private var platformHint: some View {
-        if let url = URLExtractor.firstHTTPURL(in: model.draftURL) {
-            let platform = MediaPlatform.detect(from: url)
-            Label(platform.title, systemImage: platform.systemImage)
-                .foregroundStyle(platform == .other ? Color.white.opacity(0.7) : Color.white)
-        } else {
-            Text("YouTube, Instagram, TikTok, or Vimeo")
-        }
     }
 
     private func submit() {
