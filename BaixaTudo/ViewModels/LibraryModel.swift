@@ -26,7 +26,7 @@ final class LibraryModel {
     private var tasks: [UUID: Task<Void, Never>] = [:]
     private var probeTask: Task<Void, Never>?
     /// Info já buscada pela sondagem de qualidade, reaproveitada no download pra não buscar de novo.
-    private var probedInfo: (url: String, info: VideoInfo)?
+    private var probedInfo: (url: String, cookies: BrowserCookies, info: VideoInfo)?
     /// Navegador que funcionou da última vez, tentado primeiro no modo Automático.
     private var lastWorkingCookies: BrowserCookies?
     /// Início de uma etapa de conversão sem % real (Merger/ExtractAudio), pra estimar com o tempo decorrido.
@@ -162,10 +162,23 @@ final class LibraryModel {
             return
         }
 
+        // Stories só consultam o Instagram após clicar em baixar; evita sondagem + falha duplicada.
+        if YTDLPClient.isInstagramStoryURL(url) {
+            probeTask = nil
+            probedInfo = nil
+            isProbingQuality = false
+            isImageOnly = false
+            imageCount = 1
+            availableQualities = VideoQuality.allCases
+            quality = settings.defaultQuality
+            return
+        }
+
         isProbingQuality = true
         availableQualities = []
         isImageOnly = false
         let settings = self.settings
+        let cookies = settings.cookies(for: url)
         probeTask = Task { [weak self] in
             try? await Task.sleep(for: .milliseconds(350))
             guard !Task.isCancelled, let self else { return }
@@ -173,11 +186,11 @@ final class LibraryModel {
                 let info = try await YTDLPClient.fetchInfo(
                     url: url,
                     customBinary: settings.customYTDLPPath,
-                    cookies: settings.cookiesBrowser,
+                    cookies: cookies,
                     preferringCookies: self.lastWorkingCookies
                 )
                 guard !Task.isCancelled else { return }
-                self.probedInfo = (url: url, info: info)
+                self.probedInfo = (url: url, cookies: cookies, info: info)
                 self.lastWorkingCookies = info.resolvedCookies
                 if info.isImagePost {
                     self.availableQualities = []
@@ -224,11 +237,13 @@ final class LibraryModel {
 
         // Reaproveita a info já buscada pela sondagem de qualidade pra esse mesmo URL,
         // em vez de buscar tudo de novo (webpage, formatos, cookies...).
-        let reusedInfo: VideoInfo? = probedInfo?.url == url ? probedInfo?.info : nil
-        if reusedInfo != nil { probedInfo = nil }
-        let preferredCookies = lastWorkingCookies
-
         let settings = self.settings
+        let cookies = settings.cookies(for: url)
+        let reusedInfo: VideoInfo? = probedInfo?.url == url && probedInfo?.cookies == cookies ? probedInfo?.info : nil
+        if reusedInfo != nil { probedInfo = nil }
+        let isStory = YTDLPClient.isInstagramStoryURL(url)
+        let preferredCookies = isStory ? nil : lastWorkingCookies
+
         let task = Task { [weak self] in
             guard let self else { return }
             do {
@@ -239,7 +254,7 @@ final class LibraryModel {
                     info = try await YTDLPClient.fetchInfo(
                         url: url,
                         customBinary: settings.customYTDLPPath,
-                        cookies: settings.cookiesBrowser,
+                        cookies: cookies,
                         preferringCookies: preferredCookies
                     ) { [weak self] line in
                         guard let detail = YTDLPClient.statusLine(from: line) else { return }
@@ -251,7 +266,7 @@ final class LibraryModel {
                         }
                     }
                 }
-                self.lastWorkingCookies = info.resolvedCookies
+                if !isStory { self.lastWorkingCookies = info.resolvedCookies }
                 if Task.isCancelled { return }
                 self.update(id) { current in
                     current.info = info

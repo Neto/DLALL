@@ -4,6 +4,8 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(AppSettings.self) private var settings
     @Environment(LibraryModel.self) private var model
+    @State private var checkingSession = false
+    @State private var sessionReport: String?
 
     var body: some View {
         TabView {
@@ -51,12 +53,20 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Picker("Cookies do navegador", selection: $settings.cookiesBrowser) {
+                Picker("Cookies para vídeos", selection: $settings.videoCookiesBrowser) {
                     ForEach(BrowserCookies.allCases) { option in
                         Text(option.title).tag(option)
                     }
                 }
-                Text("Automático tenta sem cookies e, se o site pedir login (YouTube, Instagram, TikTok, Vimeo privado), usa os cookies do Safari, Chrome ou outro navegador onde você já está logado. O BaixaTudo não vê sua senha, só lê os cookies locais. Para o Safari, o BaixaTudo precisa de Full Disk Access em System Settings > Privacy & Security.")
+                Text("YouTube, Reels, posts do Instagram e outros links. Nenhum evita a leitura dos cookies; Automático tenta primeiro sem login e usa um navegador se necessário.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Picker("Cookies para Instagram Stories", selection: $settings.storyCookiesBrowser) {
+                    ForEach(BrowserCookies.allCases.filter { $0.ytDlpName != nil }) { option in
+                        Text(option.title).tag(option)
+                    }
+                }
+                Text("Stories de vídeo e imagem usam somente este navegador. Para o Safari, o app precisa de Full Disk Access em System Settings → Privacy & Security.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -120,6 +130,45 @@ struct SettingsView: View {
 
                 Button("Verificar de Novo") {
                     model.refreshEngine()
+                }
+            }
+
+            Section("Diagnóstico") {
+                Toggle("Registrar diagnóstico detalhado", isOn: $settings.diagnosticLogging)
+                Text("Registra versões, navegador, leitura de cookies e erros de cada execução. Não faz consultas extras. Valores de cookies e tokens são omitidos.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Button(checkingSession ? "Checking local cookies…" : "Check Instagram session (offline)") {
+                    let browser = settings.storyCookiesBrowser
+                    let binary = settings.customYTDLPPath
+                    checkingSession = true
+                    sessionReport = nil
+                    Task {
+                        defer { checkingSession = false }
+                        do {
+                            sessionReport = try await YTDLPClient.checkInstagramSession(customBinary: binary, cookies: browser)
+                        } catch {
+                            sessionReport = error.localizedDescription
+                        }
+                    }
+                }
+                .disabled(checkingSession)
+                Text("Uses Cookies para Instagram Stories in Geral. This check reads local cookies only; it does not contact Instagram or show cookie values.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                if let sessionReport {
+                    Text(sessionReport)
+                        .font(.caption.monospaced())
+                        .textSelection(.enabled)
+                }
+                Button("Mostrar logs no Finder") {
+                    let folder = DiagnosticLog.directory
+                    do {
+                        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+                        NSWorkspace.shared.open(folder)
+                    } catch {
+                        model.banner = "Não foi possível abrir a pasta de logs: \(error.localizedDescription)"
+                    }
                 }
             }
 

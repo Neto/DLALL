@@ -38,6 +38,42 @@ enum YTDLPClient: Sendable {
     static let permissionMessage =
         "O BaixaTudo não conseguiu ler os cookies do navegador. Abra System Settings > Privacy & Security > Full Disk Access, ative o BaixaTudo e tente de novo."
 
+    /// Carrega cookies com o mesmo helper do download, mas usa um extrator local sem rede.
+    static func checkInstagramSession(customBinary: String, cookies: BrowserCookies) async throws -> String {
+        guard let browser = cookies.ytDlpName else {
+            return "Select a browser in Geral → Cookies para Instagram Stories."
+        }
+        guard let plugins = Bundle.main.url(forResource: "Diagnostics", withExtension: nil) else {
+            throw YTDLPError.failed(status: -1, message: "Local diagnostics component is missing.")
+        }
+        let result = try await run(
+            binary: requireBinary(customPath: customBinary),
+            arguments: [
+                "--ignore-config", "--no-update", "--no-colors", "--verbose",
+                "--no-plugin-dirs", "--plugin-dirs", plugins.path,
+                "--use-extractors", "baixatudo:session",
+                "--simulate", "--retries", "0", "--extractor-retries", "0",
+                "--cookies-from-browser", browser,
+                "baixatudo:instagram-session",
+            ],
+            timeout: .seconds(45),
+            onLine: { _ in }
+        )
+        guard result.status == 0 else {
+            throw YTDLPError.failed(status: result.status, message: "Local cookie check failed. See the new diagnostic log.")
+        }
+        let lines = result.log.split(whereSeparator: \.isNewline)
+            .filter { $0.contains("[session-check]") }
+            .map { line in
+                String(line[line.range(of: "[session-check]")!.upperBound...])
+                    .trimmingCharacters(in: .whitespaces)
+            }
+        guard !lines.isEmpty else {
+            throw YTDLPError.failed(status: -1, message: "Local diagnostics did not return a session report.")
+        }
+        return lines.joined(separator: "\n")
+    }
+
     /// `preferring`: navegador que funcionou da última vez — tentado primeiro no modo
     /// Automático, pra não repetir a cadeia inteira (none/safari/chrome/firefox/edge) sempre.
     static func cookieCandidates(for cookies: BrowserCookies, preferring preferred: BrowserCookies? = nil) -> [BrowserCookies] {
@@ -110,8 +146,9 @@ enum YTDLPClient: Sendable {
         onLine: @escaping @Sendable (String) -> Void
     ) async throws -> VideoInfo {
         let binary = try requireBinary(customPath: customBinary)
-        var arguments = baseArguments(cookies: cookies)
+        var arguments = try baseArguments(cookies: cookies, url: url)
         arguments += ["--skip-download"]
+        if isInstagramStoryURL(url) { arguments += ["--no-playlist"] }
         if MediaPlatform.detect(from: url) == .instagram {
             // Sem --no-playlist, pra pegar de uma vez todos os itens de um carrossel; posts de foto
             // não têm formato de vídeo nenhum e o yt-dlp trata isso como erro sem essa flag.
@@ -212,7 +249,7 @@ enum YTDLPClient: Sendable {
             .appendingPathComponent("\(titleField) [%(id)s] [\(quality.fileTag)].%(ext)s")
             .path
 
-        var arguments = baseArguments(cookies: cookies)
+        var arguments = try baseArguments(cookies: cookies, url: url)
         arguments += [
             "--newline",
             "--no-playlist",
@@ -328,7 +365,8 @@ enum YTDLPClient: Sendable {
             .appendingPathComponent("%(title).120B [%(id)s] %(playlist_index|1)s.%(ext)s")
             .path
 
-        var arguments = baseArguments(cookies: cookies)
+        var arguments = try baseArguments(cookies: cookies, url: url)
+        if isInstagramStoryURL(url) { arguments += ["--no-playlist"] }
         arguments += [
             "--newline",
             "--no-mtime",
@@ -597,13 +635,31 @@ enum YTDLPClient: Sendable {
         return url
     }
 
-    private static func baseArguments(cookies: BrowserCookies) -> [String] {
+    static func isInstagramStoryURL(_ url: String) -> Bool {
+        guard let parsed = URL(string: url) else { return false }
+        return MediaPlatform.detect(from: url) == .instagram && parsed.path.hasPrefix("/stories/")
+    }
+
+    private static func baseArguments(cookies: BrowserCookies, url: String) throws -> [String] {
         var args = [
             "--no-update",
             "--ignore-config",
             "--encoding", "utf-8",
             "--no-colors",
         ]
+        if DiagnosticLog.isEnabled {
+            args += ["--verbose", "--retries", "0", "--extractor-retries", "0"]
+        }
+        if isInstagramStoryURL(url) {
+            guard cookies.ytDlpName != nil else {
+                throw YTDLPError.failed(status: -1, message: "Select a browser in Geral → Cookies para Instagram Stories.")
+            }
+            guard let plugins = Bundle.main.url(forResource: "Diagnostics", withExtension: nil) else {
+                throw YTDLPError.failed(status: -1, message: "Stories fix component is missing.")
+            }
+            args += ["--no-plugin-dirs", "--plugin-dirs", plugins.path,
+                     "--retries", "0", "--extractor-retries", "0"]
+        }
         if let ffmpeg = BinaryLocator.findFFmpeg() {
             args += ["--ffmpeg-location", ffmpeg.path]
         }
@@ -759,28 +815,6 @@ enum YTDLPClient: Sendable {
     }
 }
 
-/// Registro simples em ~/Library/Logs/BaixaTudo.log para diagnosticar falhas (cookies, permissões, bot check).
-enum DiagnosticLog: Sendable {
-    private static let lock = NSLock()
-
-    static func write(_ message: String) {
-        let tail = String(message.suffix(1500)).replacingOccurrences(of: "\n", with: " | ")
-        let line = "\(Date().formatted(.iso8601)) \(tail)\n"
-        lock.lock()
-        defer { lock.unlock() }
-        let dir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs", isDirectory: true)
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        let url = dir.appendingPathComponent("BaixaTudo.log")
-        if let handle = try? FileHandle(forWritingTo: url) {
-            defer { try? handle.close() }
-            _ = try? handle.seekToEnd()
-            try? handle.write(contentsOf: Data(line.utf8))
-        } else {
-            try? Data(line.utf8).write(to: url)
-        }
-    }
-}
-
 /// Isola o `Process` para cancelamento e leitura incremental (evita deadlock de pipe).
 private final class ProcessSession: @unchecked Sendable {
     let process = Process()
@@ -803,9 +837,25 @@ private final class ProcessSession: @unchecked Sendable {
         process.standardError = stderrPipe
         process.standardInput = FileHandle.nullDevice
 
-        let stdoutReader = LineAssembler(onLine: onLine)
-        let stderrReader = LineAssembler(onLine: onLine)
         let startedAt = Date()
+        let diagnostic = (DiagnosticLog.isEnabled || arguments.contains("baixatudo:instagram-session"))
+            ? DiagnosticRun(binary: binary, arguments: arguments) : nil
+        let stdoutReader = LineAssembler(onLine: { line in
+            // O JSON de metadados inclui URLs assinadas e não deve ir para o log.
+            if !line.trimmingCharacters(in: .whitespaces).hasPrefix("{") {
+                diagnostic?.write("stdout: \(line)")
+            }
+            onLine(line)
+        })
+        let stderrReader = LineAssembler(onLine: { line in
+            diagnostic?.write("stderr: \(line)")
+            onLine(line)
+        })
+        var launched = false
+        defer {
+            let status = launched ? String(process.terminationStatus) : "não iniciou"
+            diagnostic?.write("END status=\(status) elapsed=\(Date().timeIntervalSince(startedAt))s")
+        }
 
         stdoutPipe.fileHandleForReading.readabilityHandler = { handle in
             stdoutReader.ingest(handle.availableData)
@@ -814,7 +864,13 @@ private final class ProcessSession: @unchecked Sendable {
             stderrReader.ingest(handle.availableData)
         }
 
-        try process.run()
+        do {
+            try process.run()
+            launched = true
+        } catch {
+            diagnostic?.write("Falha ao iniciar: \(error.localizedDescription)")
+            throw error
+        }
         process.waitUntilExit()
 
         stdoutPipe.fileHandleForReading.readabilityHandler = nil

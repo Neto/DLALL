@@ -10,6 +10,7 @@
 		0B46160503911BB0E69450FA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35084081169267C19F6265E6 /* SettingsView.swift */; };
 		0F9F990E3FCADD7C5DDF74E8 /* JobRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85F7868329898BFA43BD977 /* JobRowView.swift */; };
 		44B3897729D5F2F1F5C515F5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80490FEDECF5974DC1990D37 /* RootView.swift */; };
+		5F7F33BFD21047BA5F80ED11 /* DiagnosticLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BDAE40FB6EA02B0ECEA6CB /* DiagnosticLog.swift */; };
 		655BAEC9AA605EF0982C7336 /* ComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857275D5B6F69E189F2CEF23 /* ComposerView.swift */; };
 		8BBC8BCA79D224C69333D75C /* Funk.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 6539985FE8A1BF5C7E2CB7E9 /* Funk.aiff */; };
 		946C9B98BD274A4A5C9B6D05 /* HeaderBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9FE2FF541EC4D339262B12 /* HeaderBarView.swift */; };
@@ -24,6 +25,7 @@
 		D899980CD5056F2542F49C63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91E38F60CA25D2184B2A2DB0 /* Assets.xcassets */; };
 		DF8DFB5F5384ABDF56B87FDA /* BaixaTudoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D086C58CF1B69C8BAB211B52 /* BaixaTudoApp.swift */; };
 		EE399221C7D565B3170BA512 /* YTDLPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D241C4A1B56297384D3A4F /* YTDLPClient.swift */; };
+		F30005E69D27AD4B8E1EC40A /* Diagnostics in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CF1886C4A5176FA2CF33 /* Diagnostics */; };
 		F6D2DF423743B039219A5FB8 /* BinaryLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC1A6BCF079460BB4BDCC43 /* BinaryLocator.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +34,7 @@
 		35084081169267C19F6265E6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		5CB384BF3E0E92025EEFE122 /* AppVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersion.swift; sourceTree = "<group>"; };
 		5E3E7BBC95D6C4C8FE264221 /* DownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadJob.swift; sourceTree = "<group>"; };
+		5FD2CF1886C4A5176FA2CF33 /* Diagnostics */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Diagnostics; path = BaixaTudo/Resources/Diagnostics; sourceTree = SOURCE_ROOT; };
 		6539985FE8A1BF5C7E2CB7E9 /* Funk.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Funk.aiff; sourceTree = "<group>"; };
 		66D241C4A1B56297384D3A4F /* YTDLPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTDLPClient.swift; sourceTree = "<group>"; };
 		73BA3043DEA36148A446A387 /* LibraryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryModel.swift; sourceTree = "<group>"; };
@@ -46,6 +49,7 @@
 		C708C8A44FDE74220BA6B76F /* VideoQuality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoQuality.swift; sourceTree = "<group>"; };
 		D01C06088D7E011A0D60AB98 /* MediaPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlatform.swift; sourceTree = "<group>"; };
 		D086C58CF1B69C8BAB211B52 /* BaixaTudoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaixaTudoApp.swift; sourceTree = "<group>"; };
+		D4BDAE40FB6EA02B0ECEA6CB /* DiagnosticLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticLog.swift; sourceTree = "<group>"; };
 		EDFBF033AB3CEC651D8B9F07 /* BaixaTudo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BaixaTudo.entitlements; sourceTree = "<group>"; };
 		F85F7868329898BFA43BD977 /* JobRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -112,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				AEC1A6BCF079460BB4BDCC43 /* BinaryLocator.swift */,
+				D4BDAE40FB6EA02B0ECEA6CB /* DiagnosticLog.swift */,
 				66D241C4A1B56297384D3A4F /* YTDLPClient.swift */,
 			);
 			path = Services;
@@ -128,6 +133,7 @@
 		D49225971BC8EA85F146EEAA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5FD2CF1886C4A5176FA2CF33 /* Diagnostics */,
 				6539985FE8A1BF5C7E2CB7E9 /* Funk.aiff */,
 			);
 			path = Resources;
@@ -203,6 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D899980CD5056F2542F49C63 /* Assets.xcassets in Resources */,
+				F30005E69D27AD4B8E1EC40A /* Diagnostics in Resources */,
 				8BBC8BCA79D224C69333D75C /* Funk.aiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,93 +234,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh
-# Copia yt-dlp, ffmpeg, ffprobe e deno (Vendor/Helpers) para dentro do app recém-buildado.
-# Não toca em /Applications.
-set -e
-
-if [ -n \"${TARGET_BUILD_DIR:-}\" ] && [ -n \"${FULL_PRODUCT_NAME:-}\" ]; then
-  APP=\"${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\"
-  case \"${TARGET_BUILD_DIR}\" in
-    *Index.noindex*|*Preview*|*Previews*)
-      exit 0
-      ;;
-  esac
-else
-  APP=\"${1:-}\"
-fi
-
-if [ -z \"$APP\" ] || [ ! -d \"$APP\" ]; then
-  echo \"BaixaTudo.app não encontrado para empacotar helpers.\" >&2
-  exit 1
-fi
-
-if [ ! -f \"$APP/Contents/Info.plist\" ]; then
-  echo \"Pacote inválido: $APP\" >&2
-  exit 1
-fi
-
-HELPERS_SRC=\"\"
-if [ -n \"${SRCROOT:-}\" ] && [ -d \"${SRCROOT}/Vendor/Helpers\" ]; then
-  HELPERS_SRC=\"${SRCROOT}/Vendor/Helpers\"
-elif [ -d \"$(dirname \"$0\")/../Vendor/Helpers\" ]; then
-  HELPERS_SRC=\"$(cd \"$(dirname \"$0\")/../Vendor/Helpers\" && pwd)\"
-fi
-if [ -n \"$HELPERS_SRC\" ] && [ -x \"$HELPERS_SRC/yt-dlp.bundle/yt-dlp\" ]; then
-  /bin/mkdir -p \"$APP/Contents/Helpers\"
-  /usr/bin/rsync -a --delete \"$HELPERS_SRC/\" \"$APP/Contents/Helpers/\"
-  if [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ] && [ \"${EXPANDED_CODE_SIGN_IDENTITY}\" != \"-\" ]; then
-    HELPERS_ENT=\"\"
-    if [ -n \"${SRCROOT:-}\" ] && [ -f \"${SRCROOT}/scripts/helpers.entitlements\" ]; then
-      HELPERS_ENT=\"${SRCROOT}/scripts/helpers.entitlements\"
-    elif [ -f \"$(dirname \"$0\")/helpers.entitlements\" ]; then
-      HELPERS_ENT=\"$(dirname \"$0\")/helpers.entitlements\"
-    fi
-    # Assina as .dylib do ffmpeg/ffprobe primeiro, com o mesmo Team ID — sem isso, hardened
-    # runtime recusa carregá-las (Team ID diferente do binário que as carrega).
-    if [ -d \"$APP/Contents/Helpers/lib\" ]; then
-      find \"$APP/Contents/Helpers/lib\" -name '*.dylib' -print0 | xargs -0 -I{} /usr/bin/codesign --force --options runtime --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" {} >/dev/null 2>&1 || true
-    fi
-    # yt-dlp (PyInstaller) e deno (V8/JIT) travam sob hardened runtime sem permissão de JIT —
-    # assina os dois com entitlements próprios, nunca com --deep a partir do app (que aplicaria
-    # os entitlements do app, sem allow-jit, e quebraria o solver de desafio JS do YouTube).
-    # yt-dlp agora é uma pasta onedir (yt-dlp.bundle/, com Info.plist) em vez de onefile — onefile
-    # se autoextrai a cada execução (~7s de startup toda chamada); onedir já vem descompactado.
-    # A extensão .bundle é obrigatória: sem ela o codesign do app tenta validar o conteúdo de
-    # _internal/ (centenas de .so + um .zip) por dentro e falha; com ela, trata a pasta como um
-    # pacote já assinado e só confere o selo. Ordem: binários de _internal primeiro (exceto o
-    # Python.framework, que é assinado como framework à parte), depois a pasta .bundle inteira.
-    if [ -d \"$APP/Contents/Helpers/yt-dlp.bundle\" ] && [ -n \"$HELPERS_ENT\" ]; then
-      find \"$APP/Contents/Helpers/yt-dlp.bundle/_internal\" -type f -perm -111 -print0 | while IFS= read -r -d '' f; do
-        case \"$f\" in
-          */Python.framework/*) ;;
-          *)
-            case \"$(/usr/bin/file -b \"$f\")\" in
-              Mach-O*)
-                /usr/bin/codesign --force --options runtime --entitlements \"$HELPERS_ENT\" --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$f\" >/dev/null 2>&1 || true
-                ;;
-            esac
-            ;;
-        esac
-      done
-      if [ -d \"$APP/Contents/Helpers/yt-dlp.bundle/_internal/Python.framework\" ]; then
-        /usr/bin/codesign --force --options runtime --entitlements \"$HELPERS_ENT\" --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP/Contents/Helpers/yt-dlp.bundle/_internal/Python.framework\" >/dev/null 2>&1 || true
-      fi
-      /usr/bin/codesign --force --options runtime --entitlements \"$HELPERS_ENT\" --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP/Contents/Helpers/yt-dlp.bundle\" >/dev/null 2>&1 || true
-    fi
-    if [ -x \"$APP/Contents/Helpers/deno\" ] && [ -n \"$HELPERS_ENT\" ]; then
-      /usr/bin/codesign --force --options runtime --entitlements \"$HELPERS_ENT\" --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP/Contents/Helpers/deno\" >/dev/null 2>&1 || true
-    fi
-    for b in ffmpeg ffprobe; do
-      if [ -x \"$APP/Contents/Helpers/$b\" ]; then
-        /usr/bin/codesign --force --options runtime --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP/Contents/Helpers/$b\" >/dev/null 2>&1 || true
-      fi
-    done
-  fi
-fi
-
-echo \"Helpers embutidos em: $APP/Contents/Helpers\"
-";
+			shellScript = "#!/bin/sh\n# Copia yt-dlp, ffmpeg, ffprobe e deno (Vendor/Helpers) para dentro do app recém-buildado.\n# Não toca em /Applications.\nset -e\n\nif [ -n \"${TARGET_BUILD_DIR:-}\" ] && [ -n \"${FULL_PRODUCT_NAME:-}\" ]; then\n  APP=\"${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}\"\n  case \"${TARGET_BUILD_DIR}\" in\n    *Index.noindex*|*Preview*|*Previews*)\n      exit 0\n      ;;\n  esac\nelse\n  APP=\"${1:-}\"\nfi\n\nif [ -z \"$APP\" ] || [ ! -d \"$APP\" ]; then\n  echo \"BaixaTudo.app não encontrado para empacotar helpers.\" >&2\n  exit 1\nfi\n\nif [ ! -f \"$APP/Contents/Info.plist\" ]; then\n  echo \"Pacote inválido: $APP\" >&2\n  exit 1\nfi\n\nHELPERS_SRC=\"\"\nif [ -n \"${SRCROOT:-}\" ] && [ -d \"${SRCROOT}/Vendor/Helpers\" ]; then\n  HELPERS_SRC=\"${SRCROOT}/Vendor/Helpers\"\nelif [ -d \"$(dirname \"$0\")/../Vendor/Helpers\" ]; then\n  HELPERS_SRC=\"$(cd \"$(dirname \"$0\")/../Vendor/Helpers\" && pwd)\"\nfi\nif [ -n \"$HELPERS_SRC\" ] && [ -x \"$HELPERS_SRC/yt-dlp.bundle/yt-dlp\" ]; then\n  /bin/mkdir -p \"$APP/Contents/Helpers\"\n  /usr/bin/rsync -a --delete \"$HELPERS_SRC/\" \"$APP/Contents/Helpers/\"\n  if [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ] && [ \"${EXPANDED_CODE_SIGN_IDENTITY}\" != \"-\" ]; then\n    HELPERS_ENT=\"\"\n    if [ -n \"${SRCROOT:-}\" ] && [ -f \"${SRCROOT}/scripts/helpers.entitlements\" ]; then\n      HELPERS_ENT=\"${SRCROOT}/scripts/helpers.entitlements\"\n    elif [ -f \"$(dirname \"$0\")/helpers.entitlements\" ]; then\n      HELPERS_ENT=\"$(dirname \"$0\")/helpers.entitlements\"\n    fi\n    # Assina as .dylib do ffmpeg/ffprobe primeiro, com o mesmo Team ID — sem isso, hardened\n    # runtime recusa carregá-las (Team ID diferente do binário que as carrega).\n    if [ -d \"$APP/Contents/Helpers/lib\" ]; then\n      find \"$APP/Contents/Helpers/lib\" -name '*.dylib' -print0 | xargs -0 -I{} /usr/bin/codesign --force --options runtime --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" {} >/dev/null 2>&1 || true\n    fi\n    # yt-dlp (PyInstaller) e deno (V8/JIT) travam sob hardened runtime sem permissão de JIT —\n    # assina os dois com entitlements próprios, nunca com --deep a partir do app (que aplicaria\n    # os entitlements do app, sem allow-jit, e quebraria o solver de desafio JS do YouTube).\n    # yt-dlp agora é uma pasta onedir (yt-dlp.bundle/, com Info.plist) em vez de onefile — onefile\n    # se autoextrai a cada execução (~7s de startup toda chamada); onedir já vem descompactado.\n    # A extensão .bundle é obrigatória: sem ela o codesign do app tenta validar o conteúdo de\n    # _internal/ (centenas de .so + um .zip) por dentro e falha; com ela, trata a pasta como um\n    # pacote já assinado e só confere o selo. Ordem: binários de _internal primeiro (exceto o\n    # Python.framework, que é assinado como framework à parte), depois a pasta .bundle inteira.\n    if [ -d \"$APP/Contents/Helpers/yt-dlp.bundle\" ] && [ -n \"$HELPERS_ENT\" ]; then\n      find \"$APP/Contents/Helpers/yt-dlp.bundle/_internal\" -type f -perm -111 -print0 | while IFS= read -r -d '' f; do\n        case \"$f\" in\n          */Python.framework/*) ;;\n          *)\n            case \"$(/usr/bin/file -b \"$f\")\" in\n              Mach-O*)\n                /usr/bin/codesign --force --options runtime --entitlements \"$HELPERS_ENT\" --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$f\" >/dev/null 2>&1 || true\n                ;;\n            esac\n            ;;\n        esac\n      done\n      if [ -d \"$APP/Contents/Helpers/yt-dlp.bundle/_internal/Python.framework\" ]; then\n        /usr/bin/codesign --force --options runtime --entitlements \"$HELPERS_ENT\" --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP/Contents/Helpers/yt-dlp.bundle/_internal/Python.framework\" >/dev/null 2>&1 || true\n      fi\n      /usr/bin/codesign --force --options runtime --entitlements \"$HELPERS_ENT\" --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP/Contents/Helpers/yt-dlp.bundle\" >/dev/null 2>&1 || true\n    fi\n    if [ -x \"$APP/Contents/Helpers/deno\" ] && [ -n \"$HELPERS_ENT\" ]; then\n      /usr/bin/codesign --force --options runtime --entitlements \"$HELPERS_ENT\" --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP/Contents/Helpers/deno\" >/dev/null 2>&1 || true\n    fi\n    for b in ffmpeg ffprobe; do\n      if [ -x \"$APP/Contents/Helpers/$b\" ]; then\n        /usr/bin/codesign --force --options runtime --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \"$APP/Contents/Helpers/$b\" >/dev/null 2>&1 || true\n      fi\n    done\n  fi\nfi\n\necho \"Helpers embutidos em: $APP/Contents/Helpers\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -328,6 +249,7 @@ echo \"Helpers embutidos em: $APP/Contents/Helpers\"
 				F6D2DF423743B039219A5FB8 /* BinaryLocator.swift in Sources */,
 				C60AB18543ECBB991CF4D737 /* BrowserCookies.swift in Sources */,
 				655BAEC9AA605EF0982C7336 /* ComposerView.swift in Sources */,
+				5F7F33BFD21047BA5F80ED11 /* DiagnosticLog.swift in Sources */,
 				9EEEAD1BC514122671A1246F /* DownloadJob.swift in Sources */,
 				946C9B98BD274A4A5C9B6D05 /* HeaderBarView.swift in Sources */,
 				0F9F990E3FCADD7C5DDF74E8 /* JobRowView.swift in Sources */,
@@ -406,7 +328,7 @@ echo \"Helpers embutidos em: $APP/Contents/Helpers\"
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = NDCT2T4D7G;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -420,7 +342,7 @@ echo \"Helpers embutidos em: $APP/Contents/Helpers\"
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -493,7 +415,7 @@ echo \"Helpers embutidos em: $APP/Contents/Helpers\"
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = NDCT2T4D7G;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -513,7 +435,7 @@ echo \"Helpers embutidos em: $APP/Contents/Helpers\"
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
