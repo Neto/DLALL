@@ -45,7 +45,7 @@ struct SettingsView: View {
                 }
 
                 Picker("Default quality", selection: $settings.defaultQuality) {
-                    ForEach(VideoQuality.allCases) { option in
+                    ForEach(VideoQuality.standardCases) { option in
                         Text(option.title).tag(option)
                     }
                 }

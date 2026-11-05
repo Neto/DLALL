@@ -5,7 +5,8 @@ struct JobRowView: View {
     let job: DownloadJob
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        RequestCard(actions: cardActions) {
+          HStack(alignment: .top, spacing: 12) {
             thumbnail
             VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -24,9 +25,8 @@ struct JobRowView: View {
 
                 statusBlock
             }
-            actions
+          }
         }
-        .padding(.vertical, 4)
         .contextMenu { menuItems }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilitySummary)
@@ -147,24 +147,20 @@ struct JobRowView: View {
         }
     }
 
-    @ViewBuilder
-    private var actions: some View {
-        VStack(alignment: .trailing, spacing: 6) {
-            if job.status.isActive {
-                Button("Cancel") {
-                    model.cancel(job.id)
-                }
-            } else if case .completed = job.status {
-                Button("Show") { model.reveal(job.id) }
-                Button("Open") { model.open(job.id) }
-            } else {
-                Button("Try Again") { model.retry(job.id) }
-                Button("Remove", role: .destructive) { model.remove(job.id) }
-            }
+    private var cardActions: [CardAction] {
+        if job.status.isActive {
+            return [CardAction(title: "Cancel") { model.cancel(job.id) }]
         }
-        .buttonStyle(.borderless)
-        .controlSize(.small)
-        .frame(minWidth: 88, alignment: .trailing)
+        if case .completed = job.status {
+            return [
+                CardAction(title: "Show") { model.reveal(job.id) },
+                CardAction(title: "Open") { model.open(job.id) },
+            ]
+        }
+        return [
+            CardAction(title: "Try Again") { model.retry(job.id) },
+            CardAction(title: "Remove", destructive: true) { model.remove(job.id) },
+        ]
     }
 
     @ViewBuilder

@@ -306,7 +306,11 @@ enum YTDLPClient: Sendable {
         }
 
         if quality.prefersQuickTime {
-            return try await ensureQuickTimeCompatible(file, targetFPS: quality.targetFPS, onProgress: onProgress)
+            let compatible = try await ensureQuickTimeCompatible(file, targetFPS: quality.targetFPS, onProgress: onProgress)
+            if quality.isUpscale, let target = quality.height {
+                return try await Upscaler.upscale(compatible, toShortSide: target, onProgress: onProgress)
+            }
+            return compatible
         }
         return file
     }
@@ -563,19 +567,28 @@ enum YTDLPClient: Sendable {
         return replacement
     }
 
-    private struct MediaProbe: Sendable {
+    struct MediaProbe: Sendable {
         var videoCodec: String?
         var audioCodec: String?
         var duration: Double?
+        var width: Int?
+        var height: Int?
+        var fps: Double?
     }
 
     private struct FFProbeDTO: Decodable {
         struct Stream: Decodable {
             var codecType: String?
             var codecName: String?
+            var width: Int?
+            var height: Int?
+            var avgFrameRate: String?
             enum CodingKeys: String, CodingKey {
                 case codecType = "codec_type"
                 case codecName = "codec_name"
+                case width
+                case height
+                case avgFrameRate = "avg_frame_rate"
             }
         }
         struct Format: Decodable {
@@ -585,7 +598,7 @@ enum YTDLPClient: Sendable {
         var format: Format?
     }
 
-    private static func probeMedia(_ url: URL) async throws -> MediaProbe {
+    static func probeMedia(_ url: URL) async throws -> MediaProbe {
         guard let ffprobe = BinaryLocator.findFFprobe() ?? BinaryLocator.ffprobeBesideFFmpeg() else {
             return MediaProbe(videoCodec: nil, audioCodec: nil, duration: nil)
         }
@@ -606,10 +619,23 @@ enum YTDLPClient: Sendable {
               let dto = try? JSONDecoder().decode(FFProbeDTO.self, from: data) else {
             return MediaProbe(videoCodec: nil, audioCodec: nil, duration: nil)
         }
-        let video = dto.streams?.first(where: { $0.codecType == "video" })?.codecName
+        let videoStream = dto.streams?.first(where: { $0.codecType == "video" })
+        let video = videoStream?.codecName
         let audio = dto.streams?.first(where: { $0.codecType == "audio" })?.codecName
         let duration = dto.format?.duration.flatMap(Double.init)
-        return MediaProbe(videoCodec: video, audioCodec: audio, duration: duration)
+        var fps: Double?
+        if let rate = videoStream?.avgFrameRate {
+            let parts = rate.split(separator: "/").compactMap { Double($0) }
+            if parts.count == 2, parts[1] > 0 { fps = parts[0] / parts[1] }
+        }
+        return MediaProbe(
+            videoCodec: video,
+            audioCodec: audio,
+            duration: duration,
+            width: videoStream?.width,
+            height: videoStream?.height,
+            fps: fps
+        )
     }
 
     private static func ffmpegFraction(from line: String, duration: Double?) -> Double? {
@@ -679,7 +705,7 @@ enum YTDLPClient: Sendable {
         return args
     }
 
-    private static func run(
+    static func run(
         binary: URL,
         arguments: [String],
         timeout: Duration?,

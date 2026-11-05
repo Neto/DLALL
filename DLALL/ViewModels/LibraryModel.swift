@@ -14,6 +14,13 @@ final class LibraryModel {
     var quality: VideoQuality
     /// Opções do seletor para o URL atual; vazio enquanto não há URL válido ou a busca não terminou.
     var availableQualities: [VideoQuality] = []
+    /// Highest resolution the probed video has. Nil when unknown.
+    var probedMaxHeight: Int?
+    /// Upscale targets above the best resolution of the video.
+    var availableUpscales: [VideoQuality] {
+        guard let probedMaxHeight, !isImageOnly else { return [] }
+        return VideoQuality.upscaleOptions(forMaxHeight: probedMaxHeight)
+    }
     var isProbingQuality = false
     /// true quando o URL atual é uma foto/carrossel do Instagram: sem seletor de qualidade, baixa tudo.
     var isImageOnly = false
@@ -238,6 +245,7 @@ final class LibraryModel {
     /// de baixar ficam desabilitados (ver `canSubmit`).
     private func scheduleQualityProbe() {
         probeTask?.cancel()
+        probedMaxHeight = nil
         guard let url = URLExtractor.firstHTTPURL(in: draftURL) else {
             probeTask = nil
             isProbingQuality = false
@@ -254,7 +262,7 @@ final class LibraryModel {
             isProbingQuality = false
             isImageOnly = false
             imageCount = 1
-            availableQualities = VideoQuality.allCases
+            availableQualities = VideoQuality.standardCases
             quality = settings.defaultQuality
             return
         }
@@ -282,6 +290,7 @@ final class LibraryModel {
                     self.isImageOnly = true
                     self.imageCount = max(info.imageCount, 1)
                 } else if let maxHeight = info.availableHeights.max() {
+                    self.probedMaxHeight = maxHeight
                     self.availableQualities = VideoQuality.options(
                         forMaxHeight: maxHeight,
                         highFPSHeights: info.highFPSHeights
@@ -289,13 +298,13 @@ final class LibraryModel {
                     self.quality = info.bestH264Height.map(VideoQuality.bestH264Tier(forHeight:)) ?? .best
                 } else {
                     // Extrator não informou formatos (ou falhou em listá-los): cai nas opções genéricas.
-                    self.availableQualities = VideoQuality.allCases
+                    self.availableQualities = VideoQuality.standardCases
                     self.quality = settings.defaultQuality
                 }
             } catch {
                 guard !Task.isCancelled else { return }
                 self.probedInfo = nil
-                self.availableQualities = VideoQuality.allCases
+                self.availableQualities = VideoQuality.standardCases
                 self.quality = settings.defaultQuality
             }
             self.isProbingQuality = false

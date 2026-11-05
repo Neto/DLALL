@@ -28,7 +28,9 @@ struct RootView: View {
                                 ForEach(model.jobs) { job in
                                     JobRowView(job: job)
                                         .id(job.id)
-                                        .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                                        .listRowInsets(EdgeInsets(top: 5, leading: 14, bottom: 5, trailing: 14))
+                                        .listRowSeparator(.hidden)
+                                        .listRowBackground(Color.clear)
                                 }
                             }
                             .listStyle(.inset)

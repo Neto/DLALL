@@ -10,6 +10,10 @@ enum VideoQuality: String, Codable, CaseIterable, Identifiable, Sendable {
     case p720
     case p480
     case audioOnly
+    case up720
+    case up1080
+    case up1440
+    case up2160
 
     var id: String { rawValue }
 
@@ -24,16 +28,20 @@ enum VideoQuality: String, Codable, CaseIterable, Identifiable, Sendable {
         case .p720: "720p"
         case .p480: "480p"
         case .audioOnly: "Audio only (MP3)"
+        case .up720: "Upscale to 720p"
+        case .up1080: "Upscale to 1080p"
+        case .up1440: "Upscale to 1440p"
+        case .up2160: "Upscale to 2160p (4K)"
         }
     }
 
     /// Altura máxima do tier, ou nil para `.best`/`.audioOnly`.
     var height: Int? {
         switch self {
-        case .p2160, .p2160p30: 2160
-        case .p1440, .p1440p30: 1440
-        case .p1080: 1080
-        case .p720: 720
+        case .p2160, .p2160p30, .up2160: 2160
+        case .p1440, .p1440p30, .up1440: 1440
+        case .p1080, .up1080: 1080
+        case .p720, .up720: 720
         case .p480: 480
         case .best, .audioOnly: nil
         }
@@ -62,6 +70,8 @@ enum VideoQuality: String, Codable, CaseIterable, Identifiable, Sendable {
         switch self {
         case .audioOnly:
             "bestaudio/best"
+        case .up720, .up1080, .up1440, .up2160:
+            Self.mp4Format(maxHeight: nil)
         default:
             Self.mp4Format(maxHeight: height)
         }
@@ -80,10 +90,32 @@ enum VideoQuality: String, Codable, CaseIterable, Identifiable, Sendable {
         case .p720: "720p"
         case .p480: "480p"
         case .audioOnly: "audio"
+        case .up720: "up720"
+        case .up1080: "up1080"
+        case .up1440: "up1440"
+        case .up2160: "up2160"
         }
     }
 
     var extractsAudio: Bool { self == .audioOnly }
+
+    /// True for the options that enlarge the video after download.
+    var isUpscale: Bool {
+        switch self {
+        case .up720, .up1080, .up1440, .up2160: true
+        default: false
+        }
+    }
+
+    /// Qualities that the settings and the generic fallback list show.
+    static var standardCases: [VideoQuality] { allCases.filter { !$0.isUpscale } }
+
+    private static let upscaleTiers: [VideoQuality] = [.up720, .up1080, .up1440, .up2160]
+
+    /// Upscale targets: every tier above the best resolution the video has.
+    static func upscaleOptions(forMaxHeight maxHeight: Int) -> [VideoQuality] {
+        upscaleTiers.filter { ($0.height ?? 0) > maxHeight }
+    }
 
     var prefersQuickTime: Bool { !extractsAudio }
 

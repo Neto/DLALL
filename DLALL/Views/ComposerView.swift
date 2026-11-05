@@ -41,8 +41,17 @@ struct ComposerView: View {
 
                 Menu {
                     Picker("Quality", selection: $model.quality) {
-                        ForEach(model.availableQualities) { option in
-                            Text(option.title).tag(option)
+                        Section("Available") {
+                            ForEach(model.availableQualities) { option in
+                                Text(option.title).tag(option)
+                            }
+                        }
+                        if !model.availableUpscales.isEmpty {
+                            Section("Upscale (\(upscaleMethodLabel))") {
+                                ForEach(model.availableUpscales) { option in
+                                    Text(option.title).tag(option)
+                                }
+                            }
                         }
                     }
                     .pickerStyle(.inline)
@@ -84,6 +93,10 @@ struct ComposerView: View {
         .onAppear {
             urlFocused = true
         }
+    }
+
+    private var upscaleMethodLabel: String {
+        Upscaler.method(forShortSide: model.probedMaxHeight ?? 0).label
     }
 
     private var qualityMenuDisabled: Bool {

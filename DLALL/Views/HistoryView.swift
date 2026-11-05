@@ -43,7 +43,9 @@ struct HistoryView: View {
                 List {
                     ForEach(filtered) { entry in
                         HistoryRowView(entry: entry)
-                            .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                            .listRowInsets(EdgeInsets(top: 5, leading: 14, bottom: 5, trailing: 14))
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                     }
                 }
                 .listStyle(.inset)
@@ -76,7 +78,8 @@ struct HistoryRowView: View {
     let entry: HistoryEntry
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        RequestCard(actions: cardActions) {
+          HStack(alignment: .top, spacing: 12) {
             thumbnail
             VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -109,18 +112,8 @@ struct HistoryRowView: View {
                     .truncationMode(.middle)
                     .textSelection(.enabled)
             }
-            VStack(alignment: .trailing, spacing: 6) {
-                Button("Download Again") { model.redownload(entry.id) }
-                if entry.fileExists {
-                    Button("Show") { model.revealHistory(entry.id) }
-                }
-                Button("Remove", role: .destructive) { model.removeHistory(entry.id) }
-            }
-            .buttonStyle(.borderless)
-            .controlSize(.small)
-            .frame(minWidth: 100, alignment: .trailing)
+          }
         }
-        .padding(.vertical, 4)
         .contextMenu {
             Button("Download Again", systemImage: "arrow.down.circle") { model.redownload(entry.id) }
             if entry.fileExists {
@@ -130,6 +123,15 @@ struct HistoryRowView: View {
             Divider()
             Button("Remove from History", role: .destructive) { model.removeHistory(entry.id) }
         }
+    }
+
+    private var cardActions: [CardAction] {
+        var items = [CardAction(title: "Download Again") { model.redownload(entry.id) }]
+        if entry.fileExists {
+            items.append(CardAction(title: "Show") { model.revealHistory(entry.id) })
+        }
+        items.append(CardAction(title: "Remove", destructive: true) { model.removeHistory(entry.id) })
+        return items
     }
 
     private var thumbnail: some View {

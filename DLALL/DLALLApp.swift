@@ -9,6 +9,24 @@ struct DLALLApp: App {
         let settings = AppSettings()
         _settings = State(initialValue: settings)
         _model = State(initialValue: LibraryModel(settings: settings))
+
+        #if DEBUG
+        // Test hook: DLALL --upscale-test <file> <short side>. Writes the result to /tmp/upscale_test.log.
+        let args = CommandLine.arguments
+        if let index = args.firstIndex(of: "--upscale-test"), args.count > index + 2 {
+            let path = args[index + 1]
+            let target = Int(args[index + 2]) ?? 1080
+            Task.detached {
+                do {
+                    let out = try await Upscaler.upscale(URL(fileURLWithPath: path), toShortSide: target) { _ in }
+                    try? "OK \(out.path)".write(toFile: "/tmp/upscale_test.log", atomically: true, encoding: .utf8)
+                } catch {
+                    try? "ERR \(error)".write(toFile: "/tmp/upscale_test.log", atomically: true, encoding: .utf8)
+                }
+                exit(0)
+            }
+        }
+        #endif
     }
 
     var body: some Scene {
