@@ -23,6 +23,7 @@ extension View {
 /// Barra de topo arredondada: gradiente índigo até o preto, nome do app em branco e controles em pílulas.
 struct HeaderBarView: View {
     @Environment(LibraryModel.self) private var model
+    @Environment(\.openSettings) private var openSettings
 
     private var canClear: Bool {
         model.jobs.contains { $0.status.isFinished }
@@ -42,6 +43,20 @@ struct HeaderBarView: View {
                         .font(.callout)
                         .foregroundStyle(.white.opacity(0.7))
                 }
+
+                Button {
+                    openSettings()
+                } label: {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 14, weight: .medium))
+                        .frame(width: 34, height: 34)
+                        .glassPill(Circle())
+                        .foregroundStyle(.white)
+                        .contentShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .help("Preferências — escolher o navegador, pasta de destino e mais.")
+                .accessibilityLabel("Preferências")
 
                 Button {
                     model.clearFinished()

@@ -30,19 +30,29 @@ if [ -n "${SRCROOT:-}" ] && [ -d "${SRCROOT}/Vendor/Helpers" ]; then
 elif [ -d "$(dirname "$0")/../Vendor/Helpers" ]; then
   HELPERS_SRC="$(cd "$(dirname "$0")/../Vendor/Helpers" && pwd)"
 fi
-if [ -n "$HELPERS_SRC" ] && [ -x "$HELPERS_SRC/yt-dlp" ] && [ ! -x "$APP/Contents/Helpers/yt-dlp" ]; then
+if [ -n "$HELPERS_SRC" ] && [ -x "$HELPERS_SRC/yt-dlp" ]; then
   /bin/mkdir -p "$APP/Contents/Helpers"
-  /usr/bin/rsync -a "$HELPERS_SRC/" "$APP/Contents/Helpers/"
+  /usr/bin/rsync -a --delete "$HELPERS_SRC/" "$APP/Contents/Helpers/"
   if [ -n "${EXPANDED_CODE_SIGN_IDENTITY:-}" ] && [ "${EXPANDED_CODE_SIGN_IDENTITY}" != "-" ]; then
-    ENT="${CODE_SIGN_ENTITLEMENTS:-}"
-    if [ -n "${SRCROOT:-}" ] && [ -f "${SRCROOT}/BaixaTudo/BaixaTudo.entitlements" ]; then
-      ENT="${SRCROOT}/BaixaTudo/BaixaTudo.entitlements"
+    HELPERS_ENT=""
+    if [ -n "${SRCROOT:-}" ] && [ -f "${SRCROOT}/scripts/helpers.entitlements" ]; then
+      HELPERS_ENT="${SRCROOT}/scripts/helpers.entitlements"
+    elif [ -f "$(dirname "$0")/helpers.entitlements" ]; then
+      HELPERS_ENT="$(dirname "$0")/helpers.entitlements"
     fi
-    if [ -n "$ENT" ] && [ -f "$ENT" ]; then
-      /usr/bin/codesign --force --deep --options runtime --sign "${EXPANDED_CODE_SIGN_IDENTITY}" --entitlements "$ENT" "$APP" >/dev/null 2>&1 || true
-    else
-      /usr/bin/codesign --force --deep --options runtime --sign "${EXPANDED_CODE_SIGN_IDENTITY}" "$APP" >/dev/null 2>&1 || true
-    fi
+    # yt-dlp (PyInstaller) e deno (V8/JIT) travam sob hardened runtime sem permissão de JIT —
+    # assina os dois com entitlements próprios, nunca com --deep a partir do app (que aplicaria
+    # os entitlements do app, sem allow-jit, e quebraria o solver de desafio JS do YouTube).
+    for b in yt-dlp deno; do
+      if [ -x "$APP/Contents/Helpers/$b" ] && [ -n "$HELPERS_ENT" ]; then
+        /usr/bin/codesign --force --options runtime --entitlements "$HELPERS_ENT" --sign "${EXPANDED_CODE_SIGN_IDENTITY}" "$APP/Contents/Helpers/$b" >/dev/null 2>&1 || true
+      fi
+    done
+    for b in ffmpeg ffprobe; do
+      if [ -x "$APP/Contents/Helpers/$b" ]; then
+        /usr/bin/codesign --force --options runtime --sign "${EXPANDED_CODE_SIGN_IDENTITY}" "$APP/Contents/Helpers/$b" >/dev/null 2>&1 || true
+      fi
+    done
   fi
 fi
 
