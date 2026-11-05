@@ -21,15 +21,24 @@ struct RootView: View {
                 if model.jobs.isEmpty {
                     EmptyQueueView()
                 } else {
-                    List {
-                        ForEach(model.jobs) { job in
-                            JobRowView(job: job)
-                                .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                    ScrollViewReader { proxy in
+                        List {
+                            ForEach(model.jobs) { job in
+                                JobRowView(job: job)
+                                    .id(job.id)
+                                    .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                            }
+                        }
+                        .listStyle(.inset)
+                        .scrollContentBackground(.hidden)
+                        .alternatingRowBackgrounds(.disabled)
+                        .onChange(of: model.jobs.first?.id) { _, newID in
+                            guard let newID else { return }
+                            withAnimation {
+                                proxy.scrollTo(newID, anchor: .top)
+                            }
                         }
                     }
-                    .listStyle(.inset)
-                    .scrollContentBackground(.hidden)
-                    .alternatingRowBackgrounds(.disabled)
                 }
             }
             .ignoresSafeArea(.container, edges: .top)

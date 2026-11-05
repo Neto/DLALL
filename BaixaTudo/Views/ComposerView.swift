@@ -22,7 +22,6 @@ struct ComposerView: View {
                 .frame(height: pillHeight)
                 .glassPill(Capsule(), interactive: false)
                 .focused($urlFocused)
-                .onSubmit(submit)
                 .accessibilityLabel("URL do vídeo")
 
                 Menu {
@@ -38,15 +37,15 @@ struct ComposerView: View {
                         Image(systemName: "chevron.up.chevron.down")
                             .font(.caption2)
                     }
-                    .foregroundStyle(model.availableQualities.isEmpty ? Color.white.opacity(0.4) : Color.white)
+                    .foregroundStyle(qualityMenuDisabled ? Color.white.opacity(0.4) : Color.white)
                     .padding(.horizontal, 14)
                     .frame(height: pillHeight)
-                    .glassPill(Capsule(), interactive: !model.availableQualities.isEmpty)
+                    .glassPill(Capsule(), interactive: !qualityMenuDisabled)
                     .contentShape(Capsule())
                 }
                 .menuStyle(.borderlessButton)
                 .menuIndicator(.hidden)
-                .disabled(model.availableQualities.isEmpty)
+                .disabled(qualityMenuDisabled)
                 .fixedSize()
                 .accessibilityLabel("Qualidade")
                 .help("Qualidade do arquivo baixado.")
@@ -91,8 +90,13 @@ struct ComposerView: View {
         }
     }
 
+    private var qualityMenuDisabled: Bool {
+        model.availableQualities.isEmpty || model.isImageOnly
+    }
+
     private var qualityLabel: String {
         if model.isProbingQuality { return "Buscando…" }
+        if model.isImageOnly { return model.imageCount > 1 ? "\(model.imageCount) imagens" : "Imagem" }
         if model.availableQualities.isEmpty { return "Qualidade" }
         return model.quality.title
     }

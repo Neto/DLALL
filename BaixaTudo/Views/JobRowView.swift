@@ -106,9 +106,9 @@ struct JobRowView: View {
                 }
                 HStack {
                     if let fraction {
-                        Text(fraction.formatted(.percent.precision(.fractionLength(0))))
+                        Text("Download: \(fraction.formatted(.percent.precision(.fractionLength(0))))")
                     } else {
-                        Text("Baixando…")
+                        Text("Download…")
                     }
                     if let speed { Text(speed) }
                     if let eta { Text("resta \(eta)") }
@@ -117,9 +117,20 @@ struct JobRowView: View {
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
             }
-        case .processing:
-            ProgressView(job.statusDetail ?? "Preparando o arquivo…")
-                .controlSize(.small)
+        case .processing(let fraction):
+            VStack(alignment: .leading, spacing: 4) {
+                if let fraction {
+                    ProgressView(value: fraction)
+                        .progressViewStyle(.linear)
+                } else {
+                    ProgressView()
+                        .progressViewStyle(.linear)
+                }
+                Text(fraction.map { "Convertendo: \($0.formatted(.percent.precision(.fractionLength(0))))" } ?? "Convertendo…")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            }
         case .completed:
             Label("Concluído", systemImage: "checkmark.circle.fill")
                 .foregroundStyle(.green)
@@ -182,7 +193,12 @@ struct JobRowView: View {
             } else {
                 parts.append("baixando")
             }
-        case .processing: parts.append("processando")
+        case .processing(let fraction):
+            if let fraction {
+                parts.append("convertendo \(Int(fraction * 100)) por cento")
+            } else {
+                parts.append("convertendo")
+            }
         case .completed: parts.append("concluído")
         case .failed(let message): parts.append("falhou: \(message)")
         case .cancelled: parts.append("cancelado")

@@ -4,6 +4,7 @@ enum BrowserCookies: String, Codable, CaseIterable, Identifiable, Sendable {
     case auto
     case none
     case safari
+    case brave
     case chrome
     case firefox
     case edge
@@ -15,6 +16,7 @@ enum BrowserCookies: String, Codable, CaseIterable, Identifiable, Sendable {
         case .auto: "Automático"
         case .none: "Nenhum"
         case .safari: "Safari"
+        case .brave: "Brave"
         case .chrome: "Chrome"
         case .firefox: "Firefox"
         case .edge: "Edge"
@@ -26,6 +28,7 @@ enum BrowserCookies: String, Codable, CaseIterable, Identifiable, Sendable {
         switch self {
         case .auto, .none: nil
         case .safari: "safari"
+        case .brave: "brave"
         case .chrome: "chrome"
         case .firefox: "firefox"
         case .edge: "edge"
@@ -40,6 +43,7 @@ enum BrowserCookies: String, Codable, CaseIterable, Identifiable, Sendable {
                 || fm.fileExists(atPath: NSHomeDirectory() + "/Applications/\(app).app")
         }
         var chain: [BrowserCookies] = [.safari]
+        if installed("Brave Browser") { chain.append(.brave) }
         if installed("Google Chrome") { chain.append(.chrome) }
         if installed("Firefox") { chain.append(.firefox) }
         if installed("Microsoft Edge") { chain.append(.edge) }

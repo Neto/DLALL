@@ -38,8 +38,16 @@ enum YTDLPClient: Sendable {
     static let permissionMessage =
         "O BaixaTudo não conseguiu ler os cookies do navegador. Abra System Settings > Privacy & Security > Full Disk Access, ative o BaixaTudo e tente de novo."
 
-    static func cookieCandidates(for cookies: BrowserCookies) -> [BrowserCookies] {
-        cookies == .auto ? [.none] + BrowserCookies.automaticChain : [cookies]
+    /// `preferring`: navegador que funcionou da última vez — tentado primeiro no modo
+    /// Automático, pra não repetir a cadeia inteira (none/safari/chrome/firefox/edge) sempre.
+    static func cookieCandidates(for cookies: BrowserCookies, preferring preferred: BrowserCookies? = nil) -> [BrowserCookies] {
+        guard cookies == .auto else { return [cookies] }
+        var chain = [.none] + BrowserCookies.automaticChain
+        if let preferred, let index = chain.firstIndex(of: preferred), index != 0 {
+            chain.remove(at: index)
+            chain.insert(preferred, at: 0)
+        }
+        return chain
     }
 
     private static func needsAnotherBrowser(_ error: YTDLPError) -> Bool {
@@ -61,11 +69,12 @@ enum YTDLPClient: Sendable {
         url: String,
         customBinary: String,
         cookies: BrowserCookies,
+        preferringCookies preferred: BrowserCookies? = nil,
         onLine: @escaping @Sendable (String) -> Void = { _ in }
     ) async throws -> VideoInfo {
         var errors: [Error] = []
         for candidate in candidateURLs(for: url) {
-            for cookie in cookieCandidates(for: cookies) {
+            for cookie in cookieCandidates(for: cookies, preferring: preferred) {
                 if cookie != .none, cookies == .auto {
                     onLine("Tentando com os cookies do \(cookie.title)…")
                 }
@@ -102,9 +111,15 @@ enum YTDLPClient: Sendable {
     ) async throws -> VideoInfo {
         let binary = try requireBinary(customPath: customBinary)
         var arguments = baseArguments(cookies: cookies)
+        arguments += ["--skip-download"]
+        if MediaPlatform.detect(from: url) == .instagram {
+            // Sem --no-playlist, pra pegar de uma vez todos os itens de um carrossel; posts de foto
+            // não têm formato de vídeo nenhum e o yt-dlp trata isso como erro sem essa flag.
+            arguments += ["--ignore-no-formats-error"]
+        } else {
+            arguments += ["--no-playlist"]
+        }
         arguments += [
-            "--skip-download",
-            "--no-playlist",
             "--print", infoJSONFields,
             url,
         ]
@@ -119,13 +134,22 @@ enum YTDLPClient: Sendable {
             DiagnosticLog.write("fetchInfo cookies=\(cookies.rawValue) url=\(url) status=\(result.status) log=\(result.log)")
             throw YTDLPError.failed(status: result.status, message: friendlyMessage(from: result.log, url: url))
         }
-        let trimmed = result.stdout.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let start = trimmed.firstIndex(of: "{"),
-              let data = String(trimmed[start...]).data(using: .utf8) else {
-            throw YTDLPError.badJSON
+        let dtos = try parseInfoDTOs(from: result.stdout)
+        return VideoInfo.build(from: dtos, fallbackURL: url)
+    }
+
+    /// Um JSON por linha; mais de uma linha quando --print roda pra cada item de um carrossel.
+    private static func parseInfoDTOs(from stdout: String) throws -> [YTDLPInfoDTO] {
+        var dtos: [YTDLPInfoDTO] = []
+        for line in stdout.split(whereSeparator: \.isNewline) {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard trimmed.hasPrefix("{"), let data = trimmed.data(using: .utf8) else { continue }
+            if let dto = try? JSONDecoder().decode(YTDLPInfoDTO.self, from: data) {
+                dtos.append(dto)
+            }
         }
-        let dto = try JSONDecoder().decode(YTDLPInfoDTO.self, from: data)
-        return dto.asVideoInfo(fallbackURL: url)
+        guard !dtos.isEmpty else { throw YTDLPError.badJSON }
+        return dtos
     }
 
     static func download(
@@ -134,6 +158,7 @@ enum YTDLPClient: Sendable {
         outputFolder: URL,
         customBinary: String,
         cookies: BrowserCookies,
+        titleOverride: String? = nil,
         onProgress: @escaping @Sendable (DownloadProgress) -> Void
     ) async throws -> URL {
         var errors: [Error] = []
@@ -146,6 +171,7 @@ enum YTDLPClient: Sendable {
                         outputFolder: outputFolder,
                         customBinary: customBinary,
                         cookies: cookie,
+                        titleOverride: titleOverride,
                         onProgress: onProgress
                     )
                 } catch let error as YTDLPError {
@@ -169,6 +195,7 @@ enum YTDLPClient: Sendable {
         outputFolder: URL,
         customBinary: String,
         cookies: BrowserCookies,
+        titleOverride: String? = nil,
         onProgress: @escaping @Sendable (DownloadProgress) -> Void
     ) async throws -> URL {
         let binary = try requireBinary(customPath: customBinary)
@@ -176,8 +203,11 @@ enum YTDLPClient: Sendable {
 
         try FileManager.default.createDirectory(at: outputFolder, withIntermediateDirectories: true)
 
+        // Com override (ex: username do Instagram), usa o valor literal em vez do `%(title)` do
+        // yt-dlp — precisa escapar `%` (o template trata `%` como caractere especial).
+        let titleField = titleOverride.map { escapeOutputTemplateLiteral(String($0.prefix(180))) } ?? "%(title).180B"
         let template = outputFolder
-            .appendingPathComponent("%(title).180B [%(id)s].%(ext)s")
+            .appendingPathComponent("\(titleField) [%(id)s].%(ext)s")
             .path
 
         var arguments = baseArguments(cookies: cookies)
@@ -240,6 +270,112 @@ enum YTDLPClient: Sendable {
             return try await ensureQuickTimeCompatible(file, targetFPS: quality.targetFPS, onProgress: onProgress)
         }
         return file
+    }
+
+    // MARK: - Imagens (posts/carrosséis do Instagram)
+
+    static func downloadImages(
+        url: String,
+        outputFolder: URL,
+        customBinary: String,
+        cookies: BrowserCookies,
+        onProgress: @escaping @Sendable (DownloadProgress) -> Void
+    ) async throws -> [URL] {
+        var errors: [Error] = []
+        for candidate in candidateURLs(for: url) {
+            for cookie in cookieCandidates(for: cookies) {
+                do {
+                    return try await downloadImagesOnce(
+                        url: candidate,
+                        outputFolder: outputFolder,
+                        customBinary: customBinary,
+                        cookies: cookie,
+                        onProgress: onProgress
+                    )
+                } catch let error as YTDLPError {
+                    if case .cancelled = error { throw error }
+                    errors.append(error)
+                    if !needsAnotherBrowser(error) { break }
+                } catch is CancellationError {
+                    throw CancellationError()
+                } catch {
+                    errors.append(error)
+                    break
+                }
+            }
+        }
+        throw pickError(errors)
+    }
+
+    /// Sem seleção de formato/merge/QuickTime, sem --no-playlist (baixa o carrossel todo).
+    /// Posts de foto não têm formato de vídeo: `--write-thumbnail` baixa a própria foto (é o que
+    /// o yt-dlp expõe nesse caso) e `--ignore-no-formats-error` evita que isso derrube o processo.
+    /// Por isso o resultado é lido direto da pasta — não dá pra confiar no status de saída nem no
+    /// `after_move:filepath` (ele não dispara pra thumbnail).
+    private static func downloadImagesOnce(
+        url: String,
+        outputFolder: URL,
+        customBinary: String,
+        cookies: BrowserCookies,
+        onProgress: @escaping @Sendable (DownloadProgress) -> Void
+    ) async throws -> [URL] {
+        let binary = try requireBinary(customPath: customBinary)
+        try FileManager.default.createDirectory(at: outputFolder, withIntermediateDirectories: true)
+
+        let template = outputFolder
+            .appendingPathComponent("%(title).120B [%(id)s] %(playlist_index|1)s.%(ext)s")
+            .path
+
+        var arguments = baseArguments(cookies: cookies)
+        arguments += [
+            "--newline",
+            "--no-mtime",
+            "--ignore-no-formats-error",
+            "--write-thumbnail",
+            "-o", template,
+            url,
+        ]
+
+        let startedAt = Date()
+        let result = try await run(
+            binary: binary,
+            arguments: arguments,
+            timeout: nil,
+            onLine: { line in
+                if let parsed = ProgressParser.parse(line) {
+                    onProgress(parsed)
+                }
+            }
+        )
+
+        if Task.isCancelled { throw YTDLPError.cancelled }
+
+        let files = newestFiles(in: outputFolder, createdAfter: startedAt)
+        guard !files.isEmpty else {
+            DiagnosticLog.write("downloadImages cookies=\(cookies.rawValue) url=\(url) status=\(result.status) log=\(result.log)")
+            throw YTDLPError.failed(status: result.status, message: friendlyMessage(from: result.log, url: url))
+        }
+        return convertHEICIfNeeded(files)
+    }
+
+    /// O Instagram às vezes serve fotos em HEIC — converte pra JPEG (bem mais compatível) com o
+    /// `sips` do próprio macOS, sem precisar de outra dependência. Falha ao converter = mantém o HEIC.
+    private static func convertHEICIfNeeded(_ files: [URL]) -> [URL] {
+        files.map { file in
+            let ext = file.pathExtension.lowercased()
+            guard ext == "heic" || ext == "heif" else { return file }
+            let jpeg = file.deletingPathExtension().appendingPathExtension("jpg")
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/sips")
+            process.arguments = ["-s", "format", "jpeg", file.path, "--out", jpeg.path]
+            process.standardOutput = FileHandle.nullDevice
+            process.standardError = FileHandle.nullDevice
+            guard (try? process.run()) != nil else { return file }
+            process.waitUntilExit()
+            guard process.terminationStatus == 0, FileManager.default.fileExists(atPath: jpeg.path) else { return file }
+            try? FileManager.default.removeItem(at: file)
+            return jpeg
+        }
     }
 
     // MARK: - Vimeo
@@ -308,7 +444,7 @@ enum YTDLPClient: Sendable {
 
         onProgress(
             DownloadProgress(
-                fraction: 1,
+                fraction: nil,
                 speed: nil,
                 eta: nil,
                 isProcessing: true,
@@ -536,6 +672,31 @@ enum YTDLPClient: Sendable {
             }
             .max(by: { $0.1 < $1.1 })?
             .0
+    }
+
+    /// Como `newestFile`, mas devolve todos os arquivos novos (não só o mais recente) — usado
+    /// quando um post vira vários arquivos (carrossel de imagens).
+    private static func newestFiles(in folder: URL, createdAfter: Date) -> [URL] {
+        let cutoff = createdAfter.addingTimeInterval(-2)
+        let keys: [URLResourceKey] = [.contentModificationDateKey, .isRegularFileKey]
+        guard let files = try? FileManager.default.contentsOfDirectory(
+            at: folder,
+            includingPropertiesForKeys: keys,
+            options: [.skipsHiddenFiles]
+        ) else { return [] }
+
+        return files
+            .filter { url in
+                let values = try? url.resourceValues(forKeys: Set(keys))
+                guard values?.isRegularFile == true, let date = values?.contentModificationDate else { return false }
+                return date >= cutoff
+            }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+    }
+
+    /// `%` é caractere especial nos output templates do yt-dlp; precisa virar `%%` pra ser literal.
+    private static func escapeOutputTemplateLiteral(_ text: String) -> String {
+        text.replacingOccurrences(of: "%", with: "%%")
     }
 
     private static func looksLikeFilePath(_ line: String) -> Bool {
@@ -777,7 +938,8 @@ enum ProgressParser {
         if ns.range(of: "[Merger]", options: .caseInsensitive).location != NSNotFound
             || ns.range(of: "[ExtractAudio]", options: .caseInsensitive).location != NSNotFound
             || ns.range(of: "[ffmpeg]", options: .caseInsensitive).location != NSNotFound {
-            return DownloadProgress(fraction: 1, speed: nil, eta: nil, isProcessing: true, destinationPath: nil)
+            // yt-dlp não informa % real pra essas etapas; quem chama estima com o tempo decorrido.
+            return DownloadProgress(fraction: nil, speed: nil, eta: nil, isProcessing: true, destinationPath: nil)
         }
 
         var destination: String?

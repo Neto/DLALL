@@ -3,7 +3,7 @@ import Foundation
 enum JobStatus: Equatable, Sendable {
     case fetchingInfo
     case downloading(fraction: Double?, speed: String?, eta: String?)
-    case processing
+    case processing(fraction: Double?)
     case completed
     case failed(String)
     case cancelled

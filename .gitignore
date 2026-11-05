@@ -1,4 +1,5 @@
 Vendor/Helpers/
+Docs/
 dist/*.pkg
 dist/*.zip
 .DS_Store

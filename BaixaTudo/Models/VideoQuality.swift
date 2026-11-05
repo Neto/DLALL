@@ -71,9 +71,12 @@ enum VideoQuality: String, Codable, CaseIterable, Identifiable, Sendable {
 
     var prefersQuickTime: Bool { !extractsAudio }
 
+    /// Pra vídeo vertical (Reels, Stories, TikTok, Shorts), o `height` do yt-dlp é o lado maior
+    /// (ex: 1920 numa resolução "1080p" vertical), não bate com os tiers aqui. Tenta por altura
+    /// primeiro (vídeo horizontal) e cai pra largura (vídeo vertical) se nada bater.
     private static func mp4Format(maxHeight: Int?) -> String {
-        let h = maxHeight.map { "[height<=\($0)]" } ?? ""
-        return "bv*\(h)+ba/b\(h)"
+        guard let h = maxHeight else { return "bv*+ba/b" }
+        return "bv*[height<=\(h)]+ba/b[height<=\(h)]/bv*[width<=\(h)]+ba/b[width<=\(h)]"
     }
 
     /// Tiers de resolução, da maior para a menor.
