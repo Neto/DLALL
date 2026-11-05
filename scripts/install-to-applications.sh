@@ -1,9 +1,9 @@
 #!/bin/sh
-# Substitui /Applications/DLYT.app pela build nova.
-# Nunca cria "DLYT 2.app" nem copia para dentro do bundle antigo.
+# Substitui /Applications/BaixaTudo.app pela build nova.
+# Nunca cria "BaixaTudo 2.app" nem copia para dentro do bundle antigo.
 set -e
 
-DEST="/Applications/DLYT.app"
+DEST="/Applications/BaixaTudo.app"
 
 if [ -n "${TARGET_BUILD_DIR:-}" ] && [ -n "${FULL_PRODUCT_NAME:-}" ]; then
   APP="${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}"
@@ -17,7 +17,7 @@ else
 fi
 
 if [ -z "$APP" ] || [ ! -d "$APP" ]; then
-  echo "DLYT.app não encontrado para instalar." >&2
+  echo "BaixaTudo.app não encontrado para instalar." >&2
   exit 1
 fi
 
@@ -33,13 +33,13 @@ if [ -n "${SRCROOT:-}" ] && [ -d "${SRCROOT}/Vendor/Helpers" ]; then
 elif [ -d "$(dirname "$0")/../Vendor/Helpers" ]; then
   HELPERS_SRC="$(cd "$(dirname "$0")/../Vendor/Helpers" && pwd)"
 fi
-if [ -n "$HELPERS_SRC" ] && [ -x "$HELPERS_SRC/yt-dlp" ] && [ ! -x "$APP/Contents/Helpers/yt-dlp" ]; then
+if [ -n "$HELPERS_SRC" ] && [ -x "$HELPERS_SRC/yt-dlp.bundle/yt-dlp" ] && [ ! -x "$APP/Contents/Helpers/yt-dlp.bundle/yt-dlp" ]; then
   /bin/mkdir -p "$APP/Contents/Helpers"
   /usr/bin/rsync -a "$HELPERS_SRC/" "$APP/Contents/Helpers/"
   if [ -n "${EXPANDED_CODE_SIGN_IDENTITY:-}" ] && [ "${EXPANDED_CODE_SIGN_IDENTITY}" != "-" ]; then
     ENT="${CODE_SIGN_ENTITLEMENTS:-}"
-    if [ -n "${SRCROOT:-}" ] && [ -f "${SRCROOT}/DLYT/DLYT.entitlements" ]; then
-      ENT="${SRCROOT}/DLYT/DLYT.entitlements"
+    if [ -n "${SRCROOT:-}" ] && [ -f "${SRCROOT}/BaixaTudo/BaixaTudo.entitlements" ]; then
+      ENT="${SRCROOT}/BaixaTudo/BaixaTudo.entitlements"
     fi
     if [ -n "$ENT" ] && [ -f "$ENT" ]; then
       /usr/bin/codesign --force --deep --options runtime --sign "${EXPANDED_CODE_SIGN_IDENTITY}" --entitlements "$ENT" "$APP" >/dev/null 2>&1 || true
@@ -49,27 +49,27 @@ if [ -n "$HELPERS_SRC" ] && [ -x "$HELPERS_SRC/yt-dlp" ] && [ ! -x "$APP/Content
   fi
 fi
 
-/usr/bin/osascript -e 'quit app "DLYT"' >/dev/null 2>&1 || true
-/usr/bin/killall DLYT >/dev/null 2>&1 || true
+/usr/bin/osascript -e 'quit app "BaixaTudo"' >/dev/null 2>&1 || true
+/usr/bin/killall BaixaTudo >/dev/null 2>&1 || true
 
 i=0
-while /usr/bin/pgrep -x DLYT >/dev/null 2>&1; do
+while /usr/bin/pgrep -x BaixaTudo >/dev/null 2>&1; do
   i=$((i + 1))
   if [ "$i" -ge 25 ]; then
-    /usr/bin/killall -9 DLYT >/dev/null 2>&1 || true
+    /usr/bin/killall -9 BaixaTudo >/dev/null 2>&1 || true
     break
   fi
   sleep 0.2
 done
 sleep 0.2
 
-# Remove o bundle inteiro. cp -R em cima de um .app existente aninha DLYT.app/DLYT.app.
+# Remove o bundle inteiro. cp -R em cima de um .app existente aninha BaixaTudo.app/BaixaTudo.app.
 if [ -e "$DEST" ]; then
   /bin/rm -rf "$DEST" 2>/dev/null || true
 fi
 # Cópia instalada pelo .pkg pertence ao root: pede senha de administrador uma vez.
 if [ -e "$DEST" ]; then
-  /usr/bin/osascript -e 'do shell script "rm -rf /Applications/DLYT.app" with administrator privileges with prompt "O DLYT precisa remover a versão instalada pelo pacote para instalar a nova."' >/dev/null 2>&1 || true
+  /usr/bin/osascript -e 'do shell script "rm -rf /Applications/BaixaTudo.app" with administrator privileges with prompt "O BaixaTudo precisa remover a versão instalada pelo pacote para instalar a nova."' >/dev/null 2>&1 || true
 fi
 if [ -e "$DEST" ]; then
   echo "Não foi possível remover $DEST para substituir." >&2
@@ -85,8 +85,8 @@ if [ -x "$LSREGISTER" ]; then
   "$LSREGISTER" -f "$DEST" >/dev/null 2>&1 || true
 fi
 
-if [ -d "$DEST/DLYT.app" ]; then
-  echo "Replace falhou: bundle aninhado em $DEST/DLYT.app" >&2
+if [ -d "$DEST/BaixaTudo.app" ]; then
+  echo "Replace falhou: bundle aninhado em $DEST/BaixaTudo.app" >&2
   exit 1
 fi
 
