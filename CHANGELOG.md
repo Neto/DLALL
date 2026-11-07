@@ -1,5 +1,7 @@
 # Technical history
 
+Release 1.8.3 (build 20) has a new app icon: a neon download arrow on a dark rounded square. The sources are Design/MakeIcon.swift and Design/AppIconSource.png.
+
 Release 1.8.2 (build 19) adds the DLALL logo to the bottom right corner of the app window and of the tutorial mock window. The Close button is removed from the tutorial. The tutorial closes with Start Using DLALL or with Esc.
 
 Release 1.8.1 (build 18) updates the tutorial. The animation now plays on a light grey stage, so the dark window of the app is easy to see. The DLALL logo sits in the bottom right corner of the stage. A new step, Upscale low resolution videos, shows the Available and Upscale sections of the Quality menu.

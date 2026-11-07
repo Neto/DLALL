@@ -2,7 +2,8 @@
 import AppKit
 
 let root = URL(fileURLWithPath: "/Users/neto/ARDUINO/XCODE/DLALL")
-let source = root.appendingPathComponent("Design/AppIconSource.jpg")
+// Made by Design/MakeIcon.swift (neon style shared with Spin).
+let source = root.appendingPathComponent("Design/AppIconSource.png")
 let outDir = root.appendingPathComponent("DLALL/Assets.xcassets/AppIcon.appiconset")
 try FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
 
